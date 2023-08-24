@@ -22,6 +22,9 @@ fun onPlaceBlock(event: PlayerBlockPlaceEvent) {
             }
         }
     }
+    if(playerModes[player.username]!!.mode == PlotMode.DEV) {
+        placeDevBlock(event)
+    }
 }
 
 fun onBreakBlock(event: PlayerBlockBreakEvent) {
@@ -34,8 +37,8 @@ fun onBreakBlock(event: PlayerBlockBreakEvent) {
             }
         }
     }
+    if(playerModes[player.username]!!.mode == PlotMode.DEV) {
+        breakDevBlock(event)
+    }
 }
 
-fun placeDevBlock(event: PlayerBlockPlaceEvent) {
-
-}

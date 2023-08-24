@@ -25,17 +25,15 @@ data class Plot(val id: Int) {
         }
 
         for(x in -1000 downTo -1020 step 4) {
-            for(z in -0 downTo -50) {
+            for(z in 0..50) {
                 for(y in 1..255 step 10) {
                     instanceContainer.setBlock(x, y, z, Block.WHITE_STAINED_GLASS)
                 }
             }
         }
-        for(x in -1001 downTo -1021 step 4) {
-            for(z in -0 downTo -50) {
-                for(y in 1..255 step 10) {
-                    instanceContainer.setBlock(x, y, z, Block.WHITE_STAINED_GLASS)
-                }
+        for(x in -1000 downTo -1020) {
+            for(z in 0..50) {
+                instanceContainer.setBlock(x, 1, z, Block.WHITE_STAINED_GLASS)
             }
         }
         plots.add(this)

@@ -42,4 +42,5 @@ bin/
 .DS_Store
 
 ### Worlds ###
+# Worlds should not be saved to the repository / commits as they take up a lot of space.
 /worlds/

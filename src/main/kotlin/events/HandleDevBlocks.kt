@@ -8,6 +8,10 @@ import net.minestom.server.tag.Tag
 import org.jglrxavpok.hephaistos.nbt.NBT
 import org.jglrxavpok.hephaistos.nbt.NBTType
 
+/**
+ * Handles the logic for placing blocks in the developer space.
+ * @param event The event to get the information from.
+ */
 fun placeDevBlock(event: PlayerBlockPlaceEvent) {
     val x = event.blockPosition.blockX()
     val y = event.blockPosition.blockY()
@@ -41,6 +45,10 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
     }
 }
 
+/**
+ * Handles the logic for breaking blocks in the developer space.
+ * @param event The event to get the information from.
+ */
 fun breakDevBlock(event: PlayerBlockBreakEvent) {
     val x = event.blockPosition.blockX()
     val y = event.blockPosition.blockY()
@@ -65,6 +73,11 @@ fun breakDevBlock(event: PlayerBlockBreakEvent) {
         else -> {}
     }
 }
+
+/**
+ * Returns a `Block` with text on it's first line.
+ * @param line The line to place.
+ */
 fun signWithLine(line: String): Block {
     return Block.OAK_WALL_SIGN
         .withNbt(NBT.Compound(mapOf(

@@ -1,11 +1,15 @@
 package emeraldwater.infernity.dev.plots
 
+import com.google.gson.Gson
 import emeraldwater.infernity.dev.playerModes
+import net.hollowcube.polar.PolarLoader
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Player
 import net.minestom.server.instance.InstanceContainer
 import net.minestom.server.instance.block.Block
+import java.io.File
+import kotlin.io.path.Path
 
 var plots = mutableListOf<Plot>()
 
@@ -15,28 +19,37 @@ data class Plot(val id: Int) {
     init {
         val instanceManager = MinecraftServer.getInstanceManager()
         instanceContainer = instanceManager.createInstanceContainer()
-        for(x in 0..50) {
-            for(z in 0..50) {
-                instanceContainer.setBlock(x, 50, z, Block.GRASS_BLOCK)
-                if(x == 0 || z == 0 || x == 50 || z == 50) {
-                    instanceContainer.setBlock(x, 50, z, Block.WHITE_WOOL)
+        val file = File("./worlds/$id.polar")
+        if(file.exists()) {
+            instanceContainer.chunkLoader = PolarLoader(Path("./worlds/$id.polar"))
+        } else {
+            for(x in 0..50) {
+                for(z in 0..50) {
+                    instanceContainer.setBlock(x, 50, z, Block.GRASS_BLOCK)
+                    if(x == 0 || z == 0 || x == 50 || z == 50) {
+                        instanceContainer.setBlock(x, 50, z, Block.WHITE_WOOL)
+                    }
                 }
             }
-        }
 
-        for(x in -1000 downTo -1020 step 4) {
-            for(z in 0..50) {
-                for(y in 1..255 step 10) {
-                    instanceContainer.setBlock(x, y, z, Block.WHITE_STAINED_GLASS)
+            for(x in -1000 downTo -1020 step 4) {
+                for(z in 0..50) {
+                    for(y in 1..255 step 10) {
+                        instanceContainer.setBlock(x, y, z, Block.WHITE_STAINED_GLASS)
+                    }
+                }
+            }
+            for(x in -1000 downTo -1020) {
+                for (z in 0..50) {
+                    instanceContainer.setBlock(x, 1, z, Block.WHITE_STAINED_GLASS)
                 }
             }
         }
-        for(x in -1000 downTo -1020) {
-            for(z in 0..50) {
-                instanceContainer.setBlock(x, 1, z, Block.WHITE_STAINED_GLASS)
-            }
-        }
+        instanceContainer.chunkLoader = PolarLoader(Path("./worlds/$id.polar"))
+        instanceContainer.saveChunksToStorage()
+        instanceContainer.saveInstance()
         plots.add(this)
+
     }
 
     fun joinInstance(player: Player) {

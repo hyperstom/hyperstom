@@ -29,6 +29,12 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
             event.player.instance.setBlock(x, y+1, z, Block.BARREL)
             event.player.instance.setBlock(x-1, y, z, signWithLine("PLAYER ACTION"))
         }
+        Block.IRON_BLOCK -> {
+            event.player.instance.setBlock(x, y, z, Block.IRON_BLOCK.withTag(Tag.String("codeBlockType"), "block"))
+            event.player.instance.setBlock(x, y, z+1, Block.STONE)
+            event.player.instance.setBlock(x, y+1, z, Block.BARREL)
+            event.player.instance.setBlock(x-1, y, z, signWithLine("SET VARIABLE"))
+        }
         else -> {
             event.isCancelled = true
         }

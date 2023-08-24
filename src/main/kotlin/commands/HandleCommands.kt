@@ -64,6 +64,17 @@ fun handleCommand(command: String, player: Player) {
                 player.teleport(Pos(0.0, 52.0, 0.0))
             }
         }
+        "saveplots" -> {
+            player.sendMessage("Saving plots to storage...")
+            for(plot in plots) {
+                val container = plot.instanceContainer
+                val saved = container.saveChunksToStorage()
+                saved.thenRun {
+                    player.sendMessage("Saved plot #${plot.id} to storage.")
+                }
+            }
+            player.sendMessage("Casted all futures.")
+        }
         else -> {
             player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid command! Type /help for help."))
         }

@@ -13,11 +13,12 @@ import org.jglrxavpok.hephaistos.nbt.NBTType
  * @param event The event to get the information from.
  */
 fun placeDevBlock(event: PlayerBlockPlaceEvent) {
+    event.isCancelled = true
     val x = event.blockPosition.blockX()
     val y = event.blockPosition.blockY()
     val z = event.blockPosition.blockZ()
 
-    if(x !in -1000 downTo -1020) return
+    if(x !in -0 downTo -20) return
     if(z !in 0..50) return
     if(event.player.instance.getBlock(Pos(x.toDouble(), y-1.0, z.toDouble())) != Block.WHITE_STAINED_GLASS) return
 
@@ -50,13 +51,16 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
  * @param event The event to get the information from.
  */
 fun breakDevBlock(event: PlayerBlockBreakEvent) {
+    event.isCancelled = true
+
     val x = event.blockPosition.blockX()
     val y = event.blockPosition.blockY()
     val z = event.blockPosition.blockZ()
 
-    if(x !in -1000 downTo -1020) return
+    if(x !in -0 downTo -20) return
     if(z !in 0..50) return
     if(event.player.instance.getBlock(Pos(x.toDouble(), y-1.0, z.toDouble())) != Block.WHITE_STAINED_GLASS) return
+    println(event.block.getTag(Tag.String("codeBlockType")))
     when(event.block.getTag(Tag.String("codeBlockType"))) {
         "block" -> {
             event.player.instance.setBlock(x, y, z, Block.AIR)

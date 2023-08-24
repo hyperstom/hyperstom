@@ -2,14 +2,12 @@ package emeraldwater.infernity.dev.commands
 
 import emeraldwater.infernity.dev.instanceHub
 import emeraldwater.infernity.dev.playerModes
-import emeraldwater.infernity.dev.plots.Plot
-import emeraldwater.infernity.dev.plots.PlotMode
-import emeraldwater.infernity.dev.plots.PlotState
-import emeraldwater.infernity.dev.plots.plots
+import emeraldwater.infernity.dev.plots.*
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player
+import java.lang.Exception
 
 /**
  * Handles logic for /join and /play when not in a plot. This assumes that arguments has at least 2 elements, the command name and the plot id to join.
@@ -42,6 +40,7 @@ fun handleCommand(command: String, player: Player) {
             val mode = playerModes[player.username]!!
             if(mode.mode != PlotMode.IN_HUB) {
                 playerModes[player.username] = PlotState(mode.id, PlotMode.PLAY)
+                try { player.setInstance(filterPlot(mode.id).buildInstance) } catch(_: Exception) {}
                 player.teleport(Pos(1.0, 52.0, 1.0))
                 player.setGameMode(GameMode.SURVIVAL)
                 player.inventory.clear()
@@ -57,6 +56,7 @@ fun handleCommand(command: String, player: Player) {
             val mode = playerModes[player.username]!!
             if(mode.mode != PlotMode.IN_HUB) {
                 playerModes[player.username] = PlotState(mode.id, PlotMode.BUILD)
+                try { player.setInstance(filterPlot(mode.id).buildInstance) } catch(_: Exception) {}
                 player.teleport(Pos(1.0, 52.0, 1.0))
                 player.setGameMode(GameMode.CREATIVE)
                 player.inventory.clear()
@@ -68,9 +68,7 @@ fun handleCommand(command: String, player: Player) {
             val mode = playerModes[player.username]!!
             if(mode.mode != PlotMode.IN_HUB) {
                 playerModes[player.username] = PlotState(mode.id, PlotMode.DEV)
-                player.teleport(Pos(-1019.5, 3.0, 0.5))
-                player.setGameMode(GameMode.CREATIVE)
-                player.inventory.clear()
+                filterPlot(mode.id).joinDev(player)
             } else {
                 player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must be on a plot to use this command!"))
             }
@@ -90,7 +88,7 @@ fun handleCommand(command: String, player: Player) {
         "saveplots" -> {
             player.sendMessage("Saving plots to storage...")
             for(plot in plots) {
-                val container = plot.instanceContainer
+                val container = plot.buildInstance
                 val saved = container.saveChunksToStorage()
                 saved.thenRun {
                     player.sendMessage("Saved plot #${plot.id} to storage.")
@@ -98,6 +96,7 @@ fun handleCommand(command: String, player: Player) {
             }
             player.sendMessage("Casted all futures.")
         }
+        "state" -> player.sendMessage("${playerModes[player.username]!!}")
         else -> {
             player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid command! Type /help for help."))
         }

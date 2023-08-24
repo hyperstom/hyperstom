@@ -3,6 +3,7 @@ package emeraldwater.infernity.dev
 import emeraldwater.infernity.dev.commands.handleCommand
 import emeraldwater.infernity.dev.events.onBreakBlock
 import emeraldwater.infernity.dev.events.onPlaceBlock
+import emeraldwater.infernity.dev.plots.Plot
 import emeraldwater.infernity.dev.plots.PlotMode
 import emeraldwater.infernity.dev.plots.PlotState
 import net.kyori.adventure.text.Component
@@ -24,6 +25,7 @@ import net.minestom.server.extras.MojangAuth
 import net.minestom.server.instance.InstanceContainer
 import net.minestom.server.instance.InstanceManager
 import net.minestom.server.instance.block.Block
+import net.minestom.server.world.DimensionType
 
 lateinit var instanceHub: InstanceContainer
 var playerModes = mutableMapOf<String, PlotState>()
@@ -36,7 +38,7 @@ object Main {
         server.start("0.0.0.0", 25565)
         val instanceManager = MinecraftServer.getInstanceManager()
         // Create the instance
-        val instanceContainer = instanceManager.createInstanceContainer()
+        val instanceContainer = instanceManager.createInstanceContainer(DimensionType.OVERWORLD)
         instanceHub = instanceContainer
         // Set the ChunkGenerator
         instanceHub.setGenerator { unit ->
@@ -75,3 +77,4 @@ object Main {
 
     }
 }
+

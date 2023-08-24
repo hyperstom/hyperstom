@@ -47,7 +47,7 @@ object Main {
         val display = Entity(EntityType.TEXT_DISPLAY)
         val future = display.setInstance(instanceHub, Pos(2.0, 55.0, 0.0))
         future.thenRun {
-            display.teleport(Pos(2.0, 55.0, 0.0))
+            display.teleport(Pos(2.0, 57.0, 0.0))
         }
         val meta = display.entityMeta as TextDisplayMeta
         meta.text = MiniMessage.miniMessage().deserialize(
@@ -62,7 +62,7 @@ object Main {
             val player: Player = event.player
             event.setSpawningInstance(instanceHub)
             player.respawnPoint = Pos(0.0, 52.0, 0.0)
-            playerModes[player.username] = PlotState(-1, PlotMode.IN_HUB)
+            playerModes[player.username] = PlotState(0, PlotMode.IN_HUB)
         }
         globalEventHandler.addListener(PlayerCommandEvent::class.java) { event ->
             val player = event.player

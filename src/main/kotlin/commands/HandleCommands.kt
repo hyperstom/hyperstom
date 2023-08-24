@@ -11,19 +11,32 @@ import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player
 
+/**
+ * Handles logic for /join and /play when not in a plot. This assumes that arguments has at least 2 elements, the command name and the plot id to join.
+ * @param player the player who is joining.
+ * @param arguments the command arguments.
+ */
+fun handleJoinCommandLogic(player: Player, arguments: List<String>) {
+    val id = arguments[1].toInt()
+    val filtered = plots.filter { it.id == id }
+    if(filtered.size == 1) {
+        val plot = filtered[0]
+        plot.joinInstance(player)
+    } else {
+        val plot = Plot(id)
+        plot.joinInstance(player)
+    }
+}
+
 fun handleCommand(command: String, player: Player) {
     val arguments = command.split(' ')
     when(arguments[0]) {
         "join" -> {
-            val id = arguments[1].toInt()
-            val filtered = plots.filter { it.id == id }
-            if(filtered.size == 1) {
-                val plot = filtered[0]
-                plot.joinInstance(player)
-            } else {
-                val plot = Plot(id)
-                plot.joinInstance(player)
+            if (arguments.size == 1) {
+                player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must provide a plot id!"))
+                return
             }
+            handleJoinCommandLogic(player, arguments)
         }
         "play" -> {
             val mode = playerModes[player.username]!!
@@ -33,7 +46,11 @@ fun handleCommand(command: String, player: Player) {
                 player.setGameMode(GameMode.SURVIVAL)
                 player.inventory.clear()
             } else {
-                player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must be on a plot to use this command!"))
+                if (arguments.size == 1) {
+                    player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must provide a plot id, or be on a plot to enter play mode!"))
+                    return
+                }
+                handleJoinCommandLogic(player, arguments)
             }
         }
         "build" -> {
@@ -59,7 +76,13 @@ fun handleCommand(command: String, player: Player) {
             }
         }
         "leave" -> {
+            if (playerModes[player.username]?.mode == PlotMode.IN_HUB) {
+                player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must be in a plot to leave it!"))
+                return
+            }
+            player.sendMessage(MiniMessage.miniMessage().deserialize("Leaving plot id ${playerModes[player.username]!!.id}..."))
             val future = player.setInstance(instanceHub)
+            playerModes[player.username] = PlotState(0, PlotMode.IN_HUB)
             future.thenRun {
                 player.teleport(Pos(0.0, 52.0, 0.0))
             }

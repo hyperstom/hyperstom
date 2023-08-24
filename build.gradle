@@ -1,6 +1,7 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.8.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
     id 'application'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 group = 'dev.infernity'
@@ -8,10 +9,12 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    implementation 'dev.hollowcube:minestom-ce:5ba3d92d83'
 }
 
 test {
@@ -19,13 +22,19 @@ test {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = '1.8'
+    kotlinOptions.jvmTarget = '17'
 }
 
 compileTestKotlin {
-    kotlinOptions.jvmTarget = '1.8'
+    kotlinOptions.jvmTarget = '17'
 }
 
 application {
-    mainClassName = 'MainKt'
+    mainClassName = 'emeraldwater.infernity.dev.Main'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'emeraldwater.infernity.dev.Main'
+    }
 }

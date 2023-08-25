@@ -1,16 +1,13 @@
 package emeraldwater.infernity.dev
 
-import emeraldwater.infernity.dev.commands.handleCommand
 import emeraldwater.infernity.dev.commands.handleCommandRegistration
 import emeraldwater.infernity.dev.events.detectRightClick
 import emeraldwater.infernity.dev.events.onBreakBlock
 import emeraldwater.infernity.dev.events.onPlaceBlock
 import emeraldwater.infernity.dev.events.overrideChat
 import emeraldwater.infernity.dev.inventories.onClickItem
-import emeraldwater.infernity.dev.plots.Plot
 import emeraldwater.infernity.dev.plots.PlotMode
 import emeraldwater.infernity.dev.plots.PlotState
-import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Point
@@ -21,17 +18,13 @@ import net.minestom.server.entity.Player
 import net.minestom.server.entity.metadata.display.TextDisplayMeta
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.event.inventory.InventoryClickEvent
-import net.minestom.server.event.inventory.PlayerInventoryItemChangeEvent
 import net.minestom.server.event.player.PlayerBlockBreakEvent
 import net.minestom.server.event.player.PlayerBlockInteractEvent
 import net.minestom.server.event.player.PlayerBlockPlaceEvent
 import net.minestom.server.event.player.PlayerChatEvent
-import net.minestom.server.event.player.PlayerCommandEvent
 import net.minestom.server.event.player.PlayerLoginEvent
-import net.minestom.server.event.trait.PlayerInstanceEvent
 import net.minestom.server.extras.MojangAuth
 import net.minestom.server.instance.InstanceContainer
-import net.minestom.server.instance.InstanceManager
 import net.minestom.server.instance.block.Block
 import net.minestom.server.world.DimensionType
 
@@ -78,14 +71,6 @@ object Main {
             player.respawnPoint = Pos(0.0, 52.0, 0.0)
             playerModes[player.username] = PlotState(0, PlotMode.IN_HUB)
         }
-/*
-        globalEventHandler.addListener(PlayerCommandEvent::class.java) { event ->
-            val player = event.player
-            val command = event.command
-            handleCommand(command, player)
-        }
-
- */
         globalEventHandler.addListener(PlayerBlockInteractEvent::class.java) { event ->
             detectRightClick(event)
         }

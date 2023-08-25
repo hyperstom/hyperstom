@@ -92,17 +92,10 @@ object LeaveCommand : Command("leave") {
     }
 }
 
-fun handleCommandRegistration(){
-    MinecraftServer.getCommandManager().register(JoinCommand)
-    MinecraftServer.getCommandManager().register(PlayCommand)
-    MinecraftServer.getCommandManager().register(LeaveCommand)
-}
-
-fun handleCommand(command: String, player: Player) {
-    return /* bypass code here since its being refactored
-    val arguments = command.split(' ')
-    when(arguments[0]) {
-        "build" -> {
+object BuildCommand : Command("build") {
+    init {
+        setDefaultExecutor { sender, _ ->
+            val player = sender as Player
             val mode = playerModes[player.username]!!
             if(mode.mode != PlotMode.IN_HUB) {
                 playerModes[player.username] = PlotState(mode.id, PlotMode.BUILD)
@@ -114,7 +107,12 @@ fun handleCommand(command: String, player: Player) {
                 player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must be on a plot to use this command!"))
             }
         }
-        "dev", "code" -> {
+    }
+}
+object DevCommand : Command("dev", "code") {
+    init {
+        setDefaultExecutor { sender, _ ->
+            val player = sender as Player
             val mode = playerModes[player.username]!!
             if(mode.mode != PlotMode.IN_HUB) {
                 playerModes[player.username] = PlotState(mode.id, PlotMode.DEV)
@@ -123,7 +121,35 @@ fun handleCommand(command: String, player: Player) {
                 player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must be on a plot to use this command!"))
             }
         }
-        "saveplots" -> {
+    }
+}
+
+object DebugCommand : Command("debug"){
+    init {
+        setDefaultExecutor { sender, _ ->
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must have a valid subcommand!"))
+        }
+
+        val debugInfo = ArgumentType.Word("debug info").from("state")
+
+        debugInfo.setCallback { sender, exception ->
+            val input: String = exception.getInput()
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>$input is not a valid subcommand!"))
+        }
+
+        addSyntax({ sender, context ->
+            val player = sender as Player
+            val debugInfoToGet: String = context.get("debug info")
+            if (debugInfoToGet == "state") {
+                sender.sendMessage("player state: ${playerModes[player.username]!!}")
+            }
+        }, debugInfo)
+    }
+}
+
+object SavePlotsCommand : Command("saveplots") {
+    init {
+        setDefaultExecutor { player, _ ->
             player.sendMessage("Saving plots to storage...")
             for(plot in plots) {
                 val container = plot.buildInstance
@@ -134,9 +160,15 @@ fun handleCommand(command: String, player: Player) {
             }
             player.sendMessage("Casted all futures.")
         }
-        "state" -> player.sendMessage("${playerModes[player.username]!!}")
-        else -> {
-            player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid command! Type /help for help."))
-        }
-    }*/
+    }
+}
+
+fun handleCommandRegistration(){
+    MinecraftServer.getCommandManager().register(JoinCommand)
+    MinecraftServer.getCommandManager().register(PlayCommand)
+    MinecraftServer.getCommandManager().register(LeaveCommand)
+    MinecraftServer.getCommandManager().register(BuildCommand)
+    MinecraftServer.getCommandManager().register(DevCommand)
+    MinecraftServer.getCommandManager().register(DebugCommand)
+    MinecraftServer.getCommandManager().register(SavePlotsCommand)
 }

@@ -5,6 +5,7 @@ import emeraldwater.infernity.dev.events.detectRightClick
 import emeraldwater.infernity.dev.events.onBreakBlock
 import emeraldwater.infernity.dev.events.onPlaceBlock
 import emeraldwater.infernity.dev.events.overrideChat
+import emeraldwater.infernity.dev.inventories.handleBarrelClose
 import emeraldwater.infernity.dev.inventories.onClickItem
 import emeraldwater.infernity.dev.placement_rules.PlacementRules
 import emeraldwater.infernity.dev.plots.PlotMode
@@ -19,6 +20,8 @@ import net.minestom.server.entity.Player
 import net.minestom.server.entity.metadata.display.TextDisplayMeta
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.event.inventory.InventoryClickEvent
+import net.minestom.server.event.inventory.InventoryCloseEvent
+import net.minestom.server.event.inventory.PlayerInventoryItemChangeEvent
 import net.minestom.server.event.player.PlayerBlockBreakEvent
 import net.minestom.server.event.player.PlayerBlockInteractEvent
 import net.minestom.server.event.player.PlayerBlockPlaceEvent
@@ -34,6 +37,8 @@ var playerModes = mutableMapOf<String, PlotState>()
 var playerTargets = mutableMapOf<String, Point>()
 
 fun mm(string: String) = MiniMessage.miniMessage().deserialize("<!italic>$string")
+
+val barrelName = mm("Block Arguments")
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
@@ -81,6 +86,7 @@ object Main {
         globalEventHandler.addListener(PlayerBlockPlaceEvent::class.java) { onPlaceBlock(it) }
         globalEventHandler.addListener(InventoryClickEvent::class.java) { onClickItem(it) }
         globalEventHandler.addListener(PlayerChatEvent::class.java) { overrideChat(it) }
+        globalEventHandler.addListener(InventoryCloseEvent::class.java) { handleBarrelClose(it) }
     }
 }
 

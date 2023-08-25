@@ -152,10 +152,15 @@ object SavePlotsCommand : Command("saveplots") {
         setDefaultExecutor { player, _ ->
             player.sendMessage("Saving plots to storage...")
             for(plot in plots) {
-                val container = plot.buildInstance
-                val saved = container.saveChunksToStorage()
-                saved.thenRun {
-                    player.sendMessage("Saved plot #${plot.id} to storage.")
+                val buildWorld = plot.buildInstance
+                val savedBuildWorld = buildWorld.saveChunksToStorage()
+                savedBuildWorld.thenRun {
+                    player.sendMessage("Saved plot #${plot.id}'s build area to storage.")
+                }
+                val devWorld = plot.devInstance
+                val savedDevWorld = devWorld.saveChunksToStorage()
+                savedDevWorld.thenRun {
+                    player.sendMessage("Saved plot #${plot.id}'s development area to storage.")
                 }
             }
             player.sendMessage("Casted all futures.")

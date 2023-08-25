@@ -4,6 +4,7 @@ import emeraldwater.infernity.dev.playerModes
 import net.hollowcube.polar.PolarLoader
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Pos
+import net.minestom.server.coordinate.Vec
 import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player
 import net.minestom.server.instance.InstanceContainer
@@ -44,6 +45,15 @@ data class Plot(val id: Int) {
                         devInstance.setBlock(x, y, z, Block.WHITE_STAINED_GLASS)
                     }
                 }
+            }
+            for(x in -0 downTo -20) {
+                for(z in 0..128) {
+                    devInstance.setBlock(x, 1, z, Block.WHITE_STAINED_GLASS)
+                    if(x%3 != 0) {
+                        devInstance.setBlock(x, 1, z, Block.LIGHT_GRAY_STAINED_GLASS)
+                    }
+                }
+
             }
         }
         buildInstance.chunkLoader = PolarLoader(Path("./worlds/build-$id.polar"))

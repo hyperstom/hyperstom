@@ -63,7 +63,7 @@ data class Plot(val id: Int) {
         future.thenRun {
             player.sendMessage("You have joined plot ID #$id")
             player.teleport(Pos(0.5, 52.0, 0.5))
-            player.setGameMode(GameMode.CREATIVE)
+            player.setGameMode(GameMode.SURVIVAL)
         }
     }
 

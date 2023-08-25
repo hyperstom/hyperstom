@@ -1,6 +1,7 @@
 package emeraldwater.infernity.dev.commands
 
 import emeraldwater.infernity.dev.instanceHub
+import emeraldwater.infernity.dev.interpreter.parseDevArea
 import emeraldwater.infernity.dev.playerModes
 import emeraldwater.infernity.dev.plots.*
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -130,7 +131,7 @@ object DebugCommand : Command("debug"){
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must have a valid subcommand!"))
         }
 
-        val debugInfo = ArgumentType.Word("debug info").from("state")
+        val debugInfo = ArgumentType.Word("debug info").from("state", "parseDevArea")
 
         debugInfo.setCallback { sender, exception ->
             val input: String = exception.getInput()
@@ -142,6 +143,11 @@ object DebugCommand : Command("debug"){
             val debugInfoToGet: String = context.get("debug info")
             if (debugInfoToGet == "state") {
                 sender.sendMessage("player state: ${playerModes[player.username]!!}")
+            }
+            if(debugInfoToGet == "parseDevArea") {
+                sender.sendMessage("Parsing dev area...")
+                val headers = parseDevArea(player.instance!!)
+                sender.sendMessage("Headers:\n$headers")
             }
         }, debugInfo)
     }
@@ -167,6 +173,7 @@ object SavePlotsCommand : Command("saveplots") {
         }
     }
 }
+
 
 fun handleCommandRegistration(){
     MinecraftServer.getCommandManager().register(JoinCommand)

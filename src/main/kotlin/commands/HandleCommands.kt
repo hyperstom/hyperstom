@@ -6,9 +6,7 @@ import emeraldwater.infernity.dev.plots.*
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.minestom.server.MinecraftServer
 import net.minestom.server.command.builder.Command
-import net.minestom.server.command.builder.arguments.Argument.parse
 import net.minestom.server.command.builder.arguments.ArgumentType
-import net.minestom.server.command.builder.parser.CommandParser
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player
@@ -33,10 +31,9 @@ fun handleLeavingLogic(player: Player){
 /**
  * Handles logic for /join and /play when not in a plot. This assumes that arguments has at least 2 elements, the command name and the plot id to join.
  * @param player the player who is joining.
- * @param arguments the command arguments.
+ * @param id the plot id to join.
  */
-fun handleJoinCommandLogic(player: Player, plot: Int) {
-    val id = plot
+fun handleJoinCommandLogic(player: Player, id: Int) {
     val filtered = plots.filter { it.id == id }
     if(id == 0){
         handleLeavingLogic(player)
@@ -55,7 +52,7 @@ object JoinCommand : Command("join") {
     init {
         setDefaultExecutor { sender, context -> sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must provide a plot id!")) }
 
-        var plotId = ArgumentType.Integer("plot id");
+        val plotId = ArgumentType.Integer("plot id")
 
         addSyntax({ sender, context ->
             val plotIdNum: Int = context.get(plotId)
@@ -80,7 +77,7 @@ object PlayCommand : Command("play") {
             }
         }
 
-        var plotId = ArgumentType.Integer("plot id");
+        val plotId = ArgumentType.Integer("plot id")
 
         addSyntax({ sender, context ->
             val plotIdNum: Int = context.get(plotId)

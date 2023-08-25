@@ -20,7 +20,6 @@ fun onClickItem(event: InventoryClickEvent) {
         if(block.getTag(Tag.String("codeBlockType")) == "sign") {
             val line1 = block.getTag(Tag.String("line1"))
             player.instance.setBlock(playerTargets[player.username]!!, signWithLines(line1, changeTo))
-
         }
     }
 }

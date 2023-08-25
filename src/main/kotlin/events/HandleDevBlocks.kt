@@ -1,6 +1,7 @@
 package emeraldwater.infernity.dev.events
 
 import net.minestom.server.coordinate.Pos
+import net.minestom.server.coordinate.Vec
 import net.minestom.server.event.player.PlayerBlockBreakEvent
 import net.minestom.server.event.player.PlayerBlockPlaceEvent
 import net.minestom.server.instance.block.Block
@@ -21,7 +22,7 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
     if(x !in -0 downTo -20) return
     if(z !in 0..50) return
     if(event.player.instance.getBlock(Pos(x.toDouble(), y-1.0, z.toDouble())) != Block.WHITE_STAINED_GLASS) return
-
+    var placed = true
     when(event.block) {
         Block.DIAMOND_BLOCK -> {
             event.player.instance.setBlock(x, y, z, Block.DIAMOND_BLOCK.withTag(Tag.String("codeBlockType"), "block"))
@@ -41,7 +42,27 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
             event.player.instance.setBlock(x-1, y, z, signWithLines("SET VARIABLE"))
         }
         else -> {
+            placed = false
             event.isCancelled = true
+        }
+    }
+    if(placed) {
+        val blocks = mutableListOf<Block>()
+        for(sx in x-1..x) {
+            for(sy in y..y+2) {
+                for(sz in z+2..z+128) {
+                    blocks.add(event.player.instance.getBlock(Vec(sx.toDouble(), sy.toDouble(), sz.toDouble())))
+                    event.player.instance.setBlock(Vec(sx.toDouble(), sy.toDouble(), sz.toDouble()), Block.AIR)
+                }
+            }
+        }
+        val iter = blocks.iterator()
+        for(sx in x-1..x) {
+            for(sy in y..y+2) {
+                for(sz in z+2+2..z+128+2) {
+                    event.player.instance.setBlock(Vec(sx.toDouble(), sy.toDouble(), sz.toDouble()), iter.next())
+                }
+            }
         }
     }
 }
@@ -60,6 +81,7 @@ fun breakDevBlock(event: PlayerBlockBreakEvent) {
     if(x !in -0 downTo -20) return
     if(z !in 0..50) return
     println(event.block.getTag(Tag.String("codeBlockType")))
+    var placed = true
     when(event.block.getTag(Tag.String("codeBlockType"))) {
         "block" -> {
             event.player.instance.setBlock(x, y, z, Block.AIR)
@@ -73,7 +95,26 @@ fun breakDevBlock(event: PlayerBlockBreakEvent) {
             event.player.instance.setBlock(x+1, y+1, z, Block.AIR)
             event.player.instance.setBlock(x, y, z, Block.AIR)
         }
-        else -> {}
+        else -> placed = false
+    }
+    if(placed) {
+        val blocks = mutableListOf<Block>()
+        for(sx in x-1..x+1) {
+            for(sy in y..y+2) {
+                for(sz in z+2..z+128+2) {
+                    blocks.add(event.player.instance.getBlock(Vec(sx.toDouble(), sy.toDouble(), sz.toDouble())))
+                    event.player.instance.setBlock(Vec(sx.toDouble(), sy.toDouble(), sz.toDouble()), Block.AIR)
+                }
+            }
+        }
+        val iter = blocks.iterator()
+        for(sx in x-1..x+1) {
+            for(sy in y..y+2) {
+                for(sz in z..z+128) {
+                    event.player.instance.setBlock(Vec(sx.toDouble(), sy.toDouble(), sz.toDouble()), iter.next())
+                }
+            }
+        }
     }
 }
 

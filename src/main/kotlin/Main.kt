@@ -1,20 +1,25 @@
 package emeraldwater.infernity.dev
 
 import emeraldwater.infernity.dev.commands.handleCommand
+import emeraldwater.infernity.dev.events.detectRightClick
 import emeraldwater.infernity.dev.events.onBreakBlock
 import emeraldwater.infernity.dev.events.onPlaceBlock
+import emeraldwater.infernity.dev.inventories.onClickItem
 import emeraldwater.infernity.dev.plots.Plot
 import emeraldwater.infernity.dev.plots.PlotMode
 import emeraldwater.infernity.dev.plots.PlotState
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.minestom.server.MinecraftServer
+import net.minestom.server.coordinate.Point
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.Player
 import net.minestom.server.entity.metadata.display.TextDisplayMeta
 import net.minestom.server.event.GlobalEventHandler
+import net.minestom.server.event.inventory.InventoryClickEvent
+import net.minestom.server.event.inventory.PlayerInventoryItemChangeEvent
 import net.minestom.server.event.player.PlayerBlockBreakEvent
 import net.minestom.server.event.player.PlayerBlockInteractEvent
 import net.minestom.server.event.player.PlayerBlockPlaceEvent
@@ -29,7 +34,9 @@ import net.minestom.server.world.DimensionType
 
 lateinit var instanceHub: InstanceContainer
 var playerModes = mutableMapOf<String, PlotState>()
+var playerTargets = mutableMapOf<String, Point>()
 
+fun mm(string: String) = MiniMessage.miniMessage().deserialize("<!italic>$string")
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
@@ -72,8 +79,12 @@ object Main {
             val command = event.command
             handleCommand(command, player)
         }
+        globalEventHandler.addListener(PlayerBlockInteractEvent::class.java) { event ->
+            detectRightClick(event)
+        }
         globalEventHandler.addListener(PlayerBlockBreakEvent::class.java) { onBreakBlock(it) }
         globalEventHandler.addListener(PlayerBlockPlaceEvent::class.java) { onPlaceBlock(it) }
+        globalEventHandler.addListener(InventoryClickEvent::class.java) { onClickItem(it) }
 
     }
 }

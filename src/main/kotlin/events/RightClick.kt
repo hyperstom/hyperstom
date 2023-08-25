@@ -13,4 +13,8 @@ fun detectRightClick(event: PlayerBlockInteractEvent) {
         playerTargets[player.username] = event.blockPosition
         dispatchInventory(player)
     }
+
+    if(block.name() == "barrel") {
+        // do barrel inv
+    }
 }

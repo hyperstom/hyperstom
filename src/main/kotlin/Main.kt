@@ -4,6 +4,7 @@ import emeraldwater.infernity.dev.commands.handleCommand
 import emeraldwater.infernity.dev.events.detectRightClick
 import emeraldwater.infernity.dev.events.onBreakBlock
 import emeraldwater.infernity.dev.events.onPlaceBlock
+import emeraldwater.infernity.dev.events.overrideChat
 import emeraldwater.infernity.dev.inventories.onClickItem
 import emeraldwater.infernity.dev.plots.Plot
 import emeraldwater.infernity.dev.plots.PlotMode
@@ -23,6 +24,7 @@ import net.minestom.server.event.inventory.PlayerInventoryItemChangeEvent
 import net.minestom.server.event.player.PlayerBlockBreakEvent
 import net.minestom.server.event.player.PlayerBlockInteractEvent
 import net.minestom.server.event.player.PlayerBlockPlaceEvent
+import net.minestom.server.event.player.PlayerChatEvent
 import net.minestom.server.event.player.PlayerCommandEvent
 import net.minestom.server.event.player.PlayerLoginEvent
 import net.minestom.server.event.trait.PlayerInstanceEvent
@@ -85,7 +87,7 @@ object Main {
         globalEventHandler.addListener(PlayerBlockBreakEvent::class.java) { onBreakBlock(it) }
         globalEventHandler.addListener(PlayerBlockPlaceEvent::class.java) { onPlaceBlock(it) }
         globalEventHandler.addListener(InventoryClickEvent::class.java) { onClickItem(it) }
-
+        globalEventHandler.addListener(PlayerChatEvent::class.java) { overrideChat(it) }
     }
 }
 

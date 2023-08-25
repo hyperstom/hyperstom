@@ -38,7 +38,7 @@ data class Plot(val id: Int) {
         val devWorldFile = File("./worlds/dev-$id.polar")
         if(!devWorldFile.exists()) {
             devInstance.chunkLoader = PolarLoader(Path("./worlds/dev-$id.polar"))
-            for(x in -0 downTo -20 step 4) {
+            for(x in -0 downTo -20 step 3) {
                 for(z in 0..128) {
                     for(y in 1..255 step 10) {
                         devInstance.setBlock(x, y, z, Block.WHITE_STAINED_GLASS)

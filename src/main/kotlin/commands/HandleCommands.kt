@@ -1,21 +1,22 @@
 package emeraldwater.infernity.dev.commands
 
-import emeraldwater.infernity.dev.instanceHub
-import emeraldwater.infernity.dev.playerModes
 import emeraldwater.infernity.dev.plots.*
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.minestom.server.coordinate.Pos
-import net.minestom.server.entity.GameMode
+import net.minestom.server.MinecraftServer
+import net.minestom.server.command.builder.Command
+import net.minestom.server.command.builder.arguments.Argument.parse
+import net.minestom.server.command.builder.arguments.ArgumentType
+import net.minestom.server.command.builder.parser.CommandParser
 import net.minestom.server.entity.Player
-import java.lang.Exception
+
 
 /**
  * Handles logic for /join and /play when not in a plot. This assumes that arguments has at least 2 elements, the command name and the plot id to join.
  * @param player the player who is joining.
  * @param arguments the command arguments.
  */
-fun handleJoinCommandLogic(player: Player, arguments: List<String>) {
-    val id = arguments[1].toInt()
+fun handleJoinCommandLogic(player: Player, plot: Int) {
+    val id = plot
     val filtered = plots.filter { it.id == id }
     if(filtered.size == 1) {
         val plot = filtered[0]
@@ -26,7 +27,25 @@ fun handleJoinCommandLogic(player: Player, arguments: List<String>) {
     }
 }
 
+object JoinCommand : Command("join") {
+    init {
+        setDefaultExecutor { sender, context -> sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must provide a plot id!")) }
+
+        var plotId = ArgumentType.Integer("plot id");
+
+        addSyntax({ sender, context ->
+            val plotIdNum: Int = context.get(plotId)
+            handleJoinCommandLogic(sender as Player, plotIdNum)
+        }, plotId)
+    }
+}
+
+fun handleCommandRegistration(){
+    MinecraftServer.getCommandManager().register(JoinCommand)
+}
+
 fun handleCommand(command: String, player: Player) {
+    return /* bypass code here since its being refactored
     val arguments = command.split(' ')
     when(arguments[0]) {
         "join" -> {
@@ -100,5 +119,5 @@ fun handleCommand(command: String, player: Player) {
         else -> {
             player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid command! Type /help for help."))
         }
-    }
+    }*/
 }

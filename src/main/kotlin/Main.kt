@@ -1,6 +1,7 @@
 package emeraldwater.infernity.dev
 
 import emeraldwater.infernity.dev.commands.handleCommand
+import emeraldwater.infernity.dev.commands.handleCommandRegistration
 import emeraldwater.infernity.dev.events.detectRightClick
 import emeraldwater.infernity.dev.events.onBreakBlock
 import emeraldwater.infernity.dev.events.onPlaceBlock
@@ -53,6 +54,8 @@ object Main {
         instanceHub.setGenerator { unit ->
             unit.modifier().fillHeight(49, 50, Block.GRASS_BLOCK)
         }
+        // Register commands
+        handleCommandRegistration()
 
         // Create the text display at spawn
         val display = Entity(EntityType.TEXT_DISPLAY)
@@ -75,12 +78,14 @@ object Main {
             player.respawnPoint = Pos(0.0, 52.0, 0.0)
             playerModes[player.username] = PlotState(0, PlotMode.IN_HUB)
         }
-
+/*
         globalEventHandler.addListener(PlayerCommandEvent::class.java) { event ->
             val player = event.player
             val command = event.command
             handleCommand(command, player)
         }
+
+ */
         globalEventHandler.addListener(PlayerBlockInteractEvent::class.java) { event ->
             detectRightClick(event)
         }

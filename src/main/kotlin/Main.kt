@@ -6,6 +6,7 @@ import emeraldwater.infernity.dev.events.onBreakBlock
 import emeraldwater.infernity.dev.events.onPlaceBlock
 import emeraldwater.infernity.dev.events.overrideChat
 import emeraldwater.infernity.dev.inventories.onClickItem
+import emeraldwater.infernity.dev.placement_rules.PlacementRules
 import emeraldwater.infernity.dev.plots.PlotMode
 import emeraldwater.infernity.dev.plots.PlotState
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -49,6 +50,8 @@ object Main {
         }
         // Register commands
         handleCommandRegistration()
+        // Make placing stairs and stuff like that work
+        PlacementRules.init()
 
         // Create the text display at spawn
         val display = Entity(EntityType.TEXT_DISPLAY)

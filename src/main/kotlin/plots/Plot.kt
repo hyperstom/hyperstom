@@ -78,8 +78,6 @@ data class Plot(val id: Int) {
         }
     }
 
-
-
     suspend fun savePlot() {
         var iter = 0
         while(true) {

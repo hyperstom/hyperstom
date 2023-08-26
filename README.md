@@ -7,6 +7,34 @@
 EmeraldWater is an open-source take on [DiamondFire](https://mcdiamondfire.com) written using 
 [Minestom](https://minestom.net/) and [Kotlin](https://kotlinlang.org/).
 
+## Notable Features
+> **Warning**
+> Most of these features are not implemented yet, as EmeraldWater is under development.
+### World Plots
+Each plot is hosted using 2 Minestom Instances - one for the coding area, and one for the building area.
+The building area sizes will include 128x128, 256x256, and 512x512. The coding area sizes will remain 20x128,
+but will have plenty of vertical area.
+### Functional Paradigm
+
+EmeraldWater focuses in on the functional paradigm - this includes extra special features such as:
+- **Immutable Variables** are variables that can not be changed after they are declared
+- **Higher-Order Functions** are functions as arguments to other functions or codeblocks
+### Advanced Types
+EmeraldWater introduces a few new types:
+- **Expressions** allow you to easily get, interpolate, and change the types of values through your code.
+- **Functions** are references to functions, described above.
+- **Iterators** allow you to use the `Set Variable: Next Iteration` code action on them to get the next
+item in the list of values they iterate over. Iterators replace **List**s.
+- **Exceptions** are errors thrown during the runtime of your code. See below for more information.
+
+### Runtime Errors
+EmeraldWater also throws errors during runtime if you do invalid actions such as:
+- A codeblock with an invalid action
+- Invalid arguments passed to a function or codeblock
+- Illegal accesses to lists or dictionaries
+- And more!
+These exceptions can be caught using the **Try** and **Catch** codeblocks.
+
 ## Hosting a Local Instance
 You can host a local instance of **EmeraldWater** by doing the following:
 

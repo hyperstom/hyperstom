@@ -34,3 +34,12 @@ class SetVariableBlock(
         return """SetVariable: ${this.action.signText} $args;"""
     }
 }
+
+class SetTargetBlock(
+    val action: SetTarget,
+    override val args: List<Argument>
+) : Action {
+    override fun toString(): String {
+        return """SetTarget: ${this.action.signText} $args;"""
+    }
+}

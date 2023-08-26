@@ -17,5 +17,8 @@ fun dispatchInventory(player: Player) {
         if(block.getTag(Tag.String("line1")) == "SET VARIABLE") {
             displaySetVariableMenu(player)
         }
+        if(block.getTag(Tag.String("line1")) == "SET TARGET") {
+            displaySetTargetMenu(player)
+        }
     }
 }

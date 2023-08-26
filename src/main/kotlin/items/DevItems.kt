@@ -48,6 +48,18 @@ object DevItems {
             mm("<dark_gray>- <gray>Manipulate text values"),
         )
         .build()
+
+    val setTarget = ItemStack.builder(Material.TARGET)
+        .displayName(mm("<magenta>Set Target"))
+        .lore(
+            mm("<gray>Represents an action that changes this"),
+            mm("<gray>line's target."),
+            mm(""),
+            mm("<light_purple>Examples:"),
+            mm("<dark_gray>- <gray>Select a player by name"),
+            mm("<dark_gray>- <gray>Select an entity by tag"),
+        )
+        .build()
     /*
     Value Items
      */
@@ -90,6 +102,10 @@ object DevItems {
         .build()
         .withTag(Tag.String("varitem.id"), "num")
         .withTag(Tag.Double("varitem.value"), 0.0)
+
+    val debugStick = ItemStack.builder(Material.STICK)
+        .displayName(mm("<red>Debug Stick"))
+        .build()
 
     val valuesItem = ItemStack.builder(Material.IRON_INGOT)
         .displayName(mm("<white>Values"))

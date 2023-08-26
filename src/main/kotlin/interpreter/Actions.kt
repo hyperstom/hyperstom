@@ -39,3 +39,16 @@ fun setVariableFromString(string: String): SetVariable? {
     }
     return null
 }
+
+enum class SetTarget(val signText: String) {
+    SET_EQUALS("="),;
+}
+
+fun setTargetFromString(string: String): SetTarget? {
+    for(entry in SetTarget.entries) {
+        if(string == entry.signText) {
+            return entry
+        }
+    }
+    return null
+}

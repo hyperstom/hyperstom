@@ -26,3 +26,16 @@ fun playerActionFromString(string: String): PlayerAction? {
     }
     return null
 }
+
+enum class SetVariable(val signText: String) {
+    SET_EQUALS("="),;
+}
+
+fun setVariableFromString(string: String): SetVariable? {
+    for(entry in SetVariable.entries) {
+        if(string == entry.signText) {
+            return entry
+        }
+    }
+    return null
+}

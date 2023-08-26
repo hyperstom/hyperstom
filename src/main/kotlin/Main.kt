@@ -7,6 +7,8 @@ import emeraldwater.infernity.dev.events.onPlaceBlock
 import emeraldwater.infernity.dev.events.overrideChat
 import emeraldwater.infernity.dev.inventories.handleBarrelClose
 import emeraldwater.infernity.dev.inventories.onClickItem
+import emeraldwater.infernity.dev.items.checkValuesMenu
+import emeraldwater.infernity.dev.items.handleEditItem
 import emeraldwater.infernity.dev.placement_rules.PlacementRules
 import emeraldwater.infernity.dev.plots.PlotMode
 import emeraldwater.infernity.dev.plots.PlotState
@@ -27,9 +29,11 @@ import net.minestom.server.event.player.PlayerBlockInteractEvent
 import net.minestom.server.event.player.PlayerBlockPlaceEvent
 import net.minestom.server.event.player.PlayerChatEvent
 import net.minestom.server.event.player.PlayerLoginEvent
+import net.minestom.server.event.player.PlayerUseItemEvent
 import net.minestom.server.extras.MojangAuth
 import net.minestom.server.instance.InstanceContainer
 import net.minestom.server.instance.block.Block
+import net.minestom.server.scoreboard.Sidebar
 import net.minestom.server.world.DimensionType
 
 lateinit var instanceHub: InstanceContainer
@@ -53,6 +57,7 @@ object Main {
         instanceHub.setGenerator { unit ->
             unit.modifier().fillHeight(49, 50, Block.GRASS_BLOCK)
         }
+
         // Register commands
         handleCommandRegistration()
         // Make placing stairs and stuff like that work
@@ -85,8 +90,10 @@ object Main {
         globalEventHandler.addListener(PlayerBlockBreakEvent::class.java) { onBreakBlock(it) }
         globalEventHandler.addListener(PlayerBlockPlaceEvent::class.java) { onPlaceBlock(it) }
         globalEventHandler.addListener(InventoryClickEvent::class.java) { onClickItem(it) }
-        globalEventHandler.addListener(PlayerChatEvent::class.java) { overrideChat(it) }
+        globalEventHandler.addListener(PlayerChatEvent::class.java) { overrideChat(it); handleEditItem(it); }
         globalEventHandler.addListener(InventoryCloseEvent::class.java) { handleBarrelClose(it) }
+        globalEventHandler.addListener(PlayerUseItemEvent::class.java) { checkValuesMenu(it) }
+
     }
 }
 

@@ -1,10 +1,10 @@
 package emeraldwater.infernity.dev.plots
 
+import emeraldwater.infernity.dev.items.DevItems
 import emeraldwater.infernity.dev.playerModes
 import net.hollowcube.polar.PolarLoader
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Pos
-import net.minestom.server.coordinate.Vec
 import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player
 import net.minestom.server.instance.InstanceContainer
@@ -41,7 +41,7 @@ data class Plot(val id: Int) {
             devInstance.chunkLoader = PolarLoader(Path("./worlds/dev-$id.polar"))
             for(x in -0 downTo -20 step 3) {
                 for(z in 0..128) {
-                    for(y in 1..255 step 10) {
+                    for(y in 1..255 step 5) {
                         devInstance.setBlock(x, y, z, Block.WHITE_STAINED_GLASS)
                     }
                 }
@@ -87,6 +87,9 @@ data class Plot(val id: Int) {
             player.teleport(Pos(0.5, 4.0, 0.5))
             player.setGameMode(GameMode.CREATIVE)
             player.sendMessage("${playerModes[player.username]}")
+            player.inventory.clear()
+            player.inventory.setItemStack(8, DevItems.valuesItem)
+            player.inventory.setItemStack(7, DevItems.codeBlocksItem)
         }
     }
 }

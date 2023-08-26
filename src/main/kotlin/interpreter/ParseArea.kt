@@ -4,13 +4,14 @@ import net.minestom.server.coordinate.Point
 import net.minestom.server.coordinate.Vec
 import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
+import net.minestom.server.item.ItemStack
 import net.minestom.server.tag.Tag
 
 fun parseDevArea(instance: Instance): List<Header> {
     val headers = mutableListOf<Header>()
     for(x in -0 downTo -20 step 3) {
         for(z in 0..128) {
-            for(y in 2..255 step 10) {
+            for(y in 2..255 step 5) {
                 val block = instance.getBlock(x, y, z)
                 if(x < 10 && y < 10 && z < 10 ) {
                     println("block @ $x $y $z is $block (${block.name()})")
@@ -43,12 +44,37 @@ fun parseLine(instance: Instance, getPoint: Point): List<Action> {
         val sign = instance.getBlock(point.withX(point.x() - 1.0))
         if(stone == Block.AIR) break
         val line2 = sign.getTag(Tag.String("line2"))
+
+        val arguments = mutableListOf<Argument>()
+        for(slot in 0..53) {
+            val item = chest.getTag(Tag.ItemStack("barrel.slot$slot"))
+            if(item != null && item != ItemStack.AIR) {
+                if(item.getTag(Tag.String("varitem.id")) == "txt") {
+                    arguments.add(Argument.Text(item.getTag(Tag.String("varitem.value"))))
+                }
+                if(item.getTag(Tag.String("varitem.id")) == "rtxt") {
+                    arguments.add(Argument.RichText(item.getTag(Tag.Component("varitem.value"))))
+                }
+                if(item.getTag(Tag.String("varitem.id")) == "num") {
+                    arguments.add(Argument.Number(item.getTag(Tag.Double("varitem.value"))))
+                }
+            }
+        }
+
+
         if(block.name() == "minecraft:cobblestone") {
-            println("line2: $line2 | playerActionFromString: ${playerActionFromString(line2)}")
             if(line2 != null && playerActionFromString(line2) != null) {
                 actions.add(PlayerActionBlock(
                     playerActionFromString(line2)!!,
-                    listOf()
+                    arguments
+                ))
+            }
+        }
+        if(block.name() == "minecraft:iron_block") {
+            if(line2 != null && setVariableFromString(line2) != null) {
+                actions.add(SetVariableBlock(
+                    setVariableFromString(line2)!!,
+                    arguments
                 ))
             }
         }

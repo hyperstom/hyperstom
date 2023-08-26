@@ -1,5 +1,6 @@
 import emeraldwater.infernity.dev.inventories.displayPlayerActionMenu
 import emeraldwater.infernity.dev.inventories.displayPlayerEventMenu
+import emeraldwater.infernity.dev.inventories.displaySetVariableMenu
 import net.minestom.server.entity.Player
 import net.minestom.server.tag.Tag
 
@@ -12,6 +13,9 @@ fun dispatchInventory(player: Player) {
         }
         if(block.getTag(Tag.String("line1")) == "PLAYER ACTION") {
             displayPlayerActionMenu(player)
+        }
+        if(block.getTag(Tag.String("line1")) == "SET VARIABLE") {
+            displaySetVariableMenu(player)
         }
     }
 }

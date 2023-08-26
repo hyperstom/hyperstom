@@ -174,7 +174,6 @@ object SavePlotsCommand : Command("saveplots") {
     }
 }
 
-
 fun handleCommandRegistration(){
     MinecraftServer.getCommandManager().register(JoinCommand)
     MinecraftServer.getCommandManager().register(PlayCommand)

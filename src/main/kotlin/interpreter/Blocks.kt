@@ -22,6 +22,15 @@ class PlayerActionBlock(
     override val args: List<Argument>
 ) : Action {
     override fun toString(): String {
-        return """PlayerAction: ${this.action.signText} {}"""
+        return """PlayerAction: ${this.action.signText} $args;"""
+    }
+}
+
+class SetVariableBlock(
+    val action: SetVariable,
+    override val args: List<Argument>
+) : Action {
+    override fun toString(): String {
+        return """SetVariable: ${this.action.signText} $args;"""
     }
 }

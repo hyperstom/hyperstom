@@ -20,7 +20,7 @@ fun detectRightClick(event: PlayerBlockInteractEvent) {
 
     if(block.name() == "minecraft:barrel") {
         player.openInventory(Inventory(InventoryType.CHEST_6_ROW, barrelName))
-        for(slot in 1..54) {
+        for(slot in 0..53) {
             val compound = block.getTag(Tag.ItemStack("barrel.slot$slot"))
             if(compound != null) {
                 player.openInventory?.setItemStack(slot, compound)

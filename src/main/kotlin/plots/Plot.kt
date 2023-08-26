@@ -1,5 +1,7 @@
 package emeraldwater.infernity.dev.plots
 
+import emeraldwater.infernity.dev.interpreter.Header
+import emeraldwater.infernity.dev.interpreter.parseDevArea
 import emeraldwater.infernity.dev.items.DevItems
 import emeraldwater.infernity.dev.playerModes
 import net.hollowcube.polar.PolarLoader
@@ -11,45 +13,48 @@ import net.minestom.server.instance.InstanceContainer
 import net.minestom.server.instance.block.Block
 import net.minestom.server.world.DimensionType
 import java.io.File
-import java.lang.Exception
 import java.util.concurrent.CompletableFuture
 import kotlin.io.path.Path
+import kotlinx.coroutines.*
+import kotlin.Exception
 
 var plots = mutableListOf<Plot>()
 
 data class Plot(val id: Int) {
-    val buildInstance: InstanceContainer
-    val devInstance: InstanceContainer
+    var buildInstance: InstanceContainer
+    var devInstance: InstanceContainer
+    var devHeaders: List<Header> = listOf()
+    val plotScope = CoroutineScope(Dispatchers.Default)
     init {
         val instanceManager = MinecraftServer.getInstanceManager()
         buildInstance = instanceManager.createInstanceContainer(DimensionType.OVERWORLD)
         devInstance = instanceManager.createInstanceContainer(DimensionType.OVERWORLD)
         val buildWorldFile = File("./worlds/build-$id.polar")
-        if(!buildWorldFile.exists()) {
+        if (!buildWorldFile.exists()) {
             buildInstance.chunkLoader = PolarLoader(Path("./worlds/build-$id.polar"))
-            for(x in 0..128) {
-                for(z in 0..128) {
+            for (x in 0..128) {
+                for (z in 0..128) {
                     buildInstance.setBlock(x, 50, z, Block.GRASS_BLOCK)
-                    if(x == 0 || z == 0 || x == 128 || z == 128) {
+                    if (x == 0 || z == 0 || x == 128 || z == 128) {
                         buildInstance.setBlock(x, 50, z, Block.WHITE_WOOL)
                     }
                 }
             }
         }
         val devWorldFile = File("./worlds/dev-$id.polar")
-        if(!devWorldFile.exists()) {
+        if (!devWorldFile.exists()) {
             devInstance.chunkLoader = PolarLoader(Path("./worlds/dev-$id.polar"))
-            for(x in -0 downTo -20 step 3) {
-                for(z in 0..128) {
-                    for(y in 1..255 step 5) {
+            for (x in -0 downTo -20 step 3) {
+                for (z in 0..128) {
+                    for (y in 1..255 step 5) {
                         devInstance.setBlock(x, y, z, Block.WHITE_STAINED_GLASS)
                     }
                 }
             }
-            for(x in -0 downTo -20) {
-                for(z in 0..128) {
+            for (x in -0 downTo -20) {
+                for (z in 0..128) {
                     devInstance.setBlock(x, 1, z, Block.WHITE_STAINED_GLASS)
-                    if(x%3 != 0) {
+                    if (x % 3 != 0) {
                         devInstance.setBlock(x, 1, z, Block.LIGHT_GRAY_STAINED_GLASS)
                     }
                 }
@@ -64,14 +69,37 @@ data class Plot(val id: Int) {
         buildInstance.worldBorder.warningTime = 0
 
         devInstance.chunkLoader = PolarLoader(Path("./worlds/dev-$id.polar"))
-        buildInstance.saveChunksToStorage()
-        buildInstance.saveInstance()
-        devInstance.saveChunksToStorage()
-        devInstance.saveInstance()
-        plots.add(this)
 
+
+        plots.add(this@Plot)
+
+        plotScope.launch {
+            savePlot()
+        }
     }
 
+
+
+    suspend fun savePlot() {
+        var iter = 0
+        while(true) {
+            iter++
+            try {
+                devHeaders = parseDevArea(devInstance)
+            } catch(e: Exception) {}
+
+            if(iter%4 == 0) {
+                buildInstance.saveChunksToStorage()
+                buildInstance.saveInstance()
+                devInstance.saveChunksToStorage()
+                devInstance.saveInstance()
+            }
+
+
+
+            delay(2000L)
+        }
+    }
     fun joinInstance(player: Player) {
         player.sendMessage("Taking you to plot ID #$id...")
         val future = player.setInstance(buildInstance)

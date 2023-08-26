@@ -13,9 +13,6 @@ fun parseDevArea(instance: Instance): List<Header> {
         for(z in 0..128) {
             for(y in 2..255 step 5) {
                 val block = instance.getBlock(x, y, z)
-                if(x < 10 && y < 10 && z < 10 ) {
-                    println("block @ $x $y $z is $block (${block.name()})")
-                }
                 if(block.name() == "minecraft:diamond_block") {
                     val event = instance.getBlock(x-1, y, z).getTag(Tag.String("line2"))
                     println("event: $event | playerEventFromString: ${playerEventFromString(event)}")

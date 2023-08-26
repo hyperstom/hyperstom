@@ -19,8 +19,6 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
     val y = event.blockPosition.blockY()
     val z = event.blockPosition.blockZ()
 
-    if(x !in -0 downTo -20) return
-    if(z !in 0..50) return
     if(event.player.instance.getBlock(Pos(x.toDouble(), y-1.0, z.toDouble())) != Block.WHITE_STAINED_GLASS) return
     var placed = true
     when(event.block) {
@@ -78,8 +76,6 @@ fun breakDevBlock(event: PlayerBlockBreakEvent) {
     val y = event.blockPosition.blockY()
     val z = event.blockPosition.blockZ()
 
-    if(x !in -0 downTo -20) return
-    if(z !in 0..50) return
     println(event.block.getTag(Tag.String("codeBlockType")))
     var placed = true
     when(event.block.getTag(Tag.String("codeBlockType"))) {

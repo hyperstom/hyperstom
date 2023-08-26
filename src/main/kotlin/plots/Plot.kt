@@ -57,6 +57,12 @@ data class Plot(val id: Int) {
             }
         }
         buildInstance.chunkLoader = PolarLoader(Path("./worlds/build-$id.polar"))
+        buildInstance.worldBorder.centerX = 64.0f
+        buildInstance.worldBorder.centerZ = 64.0f
+        buildInstance.worldBorder.diameter = 128.0
+        buildInstance.worldBorder.warningBlocks = 0
+        buildInstance.worldBorder.warningTime = 0
+
         devInstance.chunkLoader = PolarLoader(Path("./worlds/dev-$id.polar"))
         buildInstance.saveChunksToStorage()
         buildInstance.saveInstance()

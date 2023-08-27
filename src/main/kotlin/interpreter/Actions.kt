@@ -18,7 +18,8 @@ fun playerEventFromString(string: String): PlayerEvent? {
 }
 
 enum class PlayerAction(val signText: String) {
-    SEND_MESSAGE("SendMessage");
+    SEND_MESSAGE("SendMessage"),
+    LAUNCH_UP("LaunchUp");
 }
 
 fun playerActionFromString(string: String): PlayerAction? {

@@ -47,6 +47,12 @@ class Interpreter(
                         playerTarget.sendMessage(text.value)
                     }
                 }
+                PlayerAction.LAUNCH_UP -> {
+                val num = block.args[0]
+                if(num is Argument.Number) {
+                    playerTarget.velocity = playerTarget.velocity.add(0.0, num.value, 0.0)
+                }
+            }
             }
         }
     }

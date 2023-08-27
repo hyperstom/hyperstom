@@ -20,6 +20,16 @@ private val menuItems: List<ItemStack> = listOf(
         .displayName(mm("<!italic><green>Send Message"))
         .build()
         .withTag(Tag.String("changeSign"), "SendMessage"),
+    ItemStack.builder(Material.STICK)
+        .lore(
+            mm("<gray>Launch the player up."),
+            mm(""),
+            mm("<white>Chest Parameters:"),
+            mm("<red>Number <dark_gray>- <gray>Amount to launch them up by."),
+        )
+        .displayName(mm("<!italic><green>Launch Up"))
+        .build()
+        .withTag(Tag.String("changeSign"), "LaunchUp"),
 )
 
 fun displayPlayerActionMenu(player: Player) {

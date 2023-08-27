@@ -1,5 +1,6 @@
-package emeraldwater.infernity.dev.inventories
+package emeraldwater.infernity.dev.inventories.items
 
+import emeraldwater.infernity.dev.interpreter.IfPlayer
 import emeraldwater.infernity.dev.mm
 import net.minestom.server.entity.Player
 import net.minestom.server.inventory.Inventory
@@ -10,16 +11,12 @@ import net.minestom.server.item.Material
 import net.minestom.server.tag.Tag
 
 private val menuItems: List<ItemStack> = listOf(
-    ItemStack.builder(Material.OAK_PRESSURE_PLATE)
-        .lore(
-            mm("<gray>Checks if a player is standing on a block."),
-            mm(""),
-            mm("<white>Chest Parameters:"),
-            mm("<yellow>Block[s] <dark_gray>- <gray>The list of block[s] to check against."),
-        )
-        .displayName(mm("<!italic><gold>Is Standing on Block"))
-        .build()
-        .withTag(Tag.String("changeSign"), "StandingOn"),
+    DevItemBuilder()
+        .item(Material.OAK_PRESSURE_PLATE)
+        .name("<gold>Is Standing On Block")
+        .description("Checks if a player is standing on something.")
+        .parameterPlural(Type.BLOCK, "Blocks to check against")
+        .build(IfPlayer.STANDING_ON),
 )
 
 fun displayIfPlayerMenu(player: Player) {

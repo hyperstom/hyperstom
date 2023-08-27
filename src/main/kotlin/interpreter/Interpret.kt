@@ -1,5 +1,6 @@
 package emeraldwater.infernity.dev.interpreter
 
+import emeraldwater.infernity.dev.interpreter.actions.playerAction
 import emeraldwater.infernity.dev.playerInterpreter
 import emeraldwater.infernity.dev.playerModes
 import kotlinx.coroutines.CoroutineScope
@@ -50,32 +51,22 @@ class Interpreter(
     }
 
     fun interpretBlock(block: Action) {
-        if(block is PlayerActionBlock) {
-            try {
-                when(block.action) {
-                    PlayerAction.SEND_MESSAGE -> {
-                        val text = block.args[0]
-                        if(text is Argument.RichText) {
-                            playerTarget.sendMessage(text.value)
-                        }
-                    }
-                    PlayerAction.LAUNCH_UP -> {
-                        val num = block.args[0]
-                        if(num is Argument.Number) {
-                            playerTarget.velocity = playerTarget.velocity.add(0.0, num.value, 0.0)
-                        }
-                    }
-                }
-            } catch(e: Exception) {
-                when(e) {
-                    is IndexOutOfBoundsException -> {}
-                    else -> {
-                        println("An unknown exception occured during interpreting:")
-                        e.printStackTrace()
-                    }
-                }
+        try {
+            if(block is PlayerActionBlock) {
+                playerAction(block)
             }
 
+        } catch(e: Exception) {
+            when(e) {
+                is IndexOutOfBoundsException -> {}
+                else -> {
+                    println("An unknown exception occured during interpreting:")
+                    e.printStackTrace()
+                }
+            }
         }
+
     }
+
+
 }

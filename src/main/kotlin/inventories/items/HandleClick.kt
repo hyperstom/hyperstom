@@ -1,4 +1,4 @@
-package emeraldwater.infernity.dev.inventories
+package emeraldwater.infernity.dev.inventories.items
 
 import emeraldwater.infernity.dev.barrelName
 import emeraldwater.infernity.dev.events.signWithLines

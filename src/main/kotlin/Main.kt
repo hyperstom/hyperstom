@@ -7,7 +7,7 @@ import emeraldwater.infernity.dev.events.onPlaceBlock
 import emeraldwater.infernity.dev.events.overrideChat
 import emeraldwater.infernity.dev.interpreter.Interpreter
 import emeraldwater.infernity.dev.inventories.handleBarrelClose
-import emeraldwater.infernity.dev.inventories.onClickItem
+import emeraldwater.infernity.dev.inventories.items.onClickItem
 import emeraldwater.infernity.dev.items.checkValuesMenu
 import emeraldwater.infernity.dev.items.handleEditItem
 import emeraldwater.infernity.dev.placement_rules.PlacementRules
@@ -24,7 +24,6 @@ import net.minestom.server.entity.metadata.display.TextDisplayMeta
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.event.inventory.InventoryClickEvent
 import net.minestom.server.event.inventory.InventoryCloseEvent
-import net.minestom.server.event.inventory.PlayerInventoryItemChangeEvent
 import net.minestom.server.event.player.PlayerBlockBreakEvent
 import net.minestom.server.event.player.PlayerBlockInteractEvent
 import net.minestom.server.event.player.PlayerBlockPlaceEvent
@@ -34,7 +33,6 @@ import net.minestom.server.event.player.PlayerUseItemEvent
 import net.minestom.server.extras.MojangAuth
 import net.minestom.server.instance.InstanceContainer
 import net.minestom.server.instance.block.Block
-import net.minestom.server.scoreboard.Sidebar
 import net.minestom.server.world.DimensionType
 
 lateinit var instanceHub: InstanceContainer

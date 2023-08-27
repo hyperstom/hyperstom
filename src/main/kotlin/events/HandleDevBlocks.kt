@@ -37,8 +37,8 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
     }
     if (placed) {
         val blocks = mutableListOf<Block>()
-        if (event.player.instance.getBlock(x, y, z + width) == Block.AIR ||
-            event.player.instance.getBlock(x, y, z + width).name() == "minecraft:piston"
+        if (
+            event.player.instance.getBlock(x, y, z + 1).name() == "minecraft:piston"
         ) {
             for (sx in x - 1..x + 1) {
                 for (sy in y..y + 2) {

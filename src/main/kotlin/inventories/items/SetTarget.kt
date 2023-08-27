@@ -1,3 +1,5 @@
+import emeraldwater.infernity.dev.interpreter.SetTarget
+import emeraldwater.infernity.dev.inventories.items.DevItemBuilder
 import emeraldwater.infernity.dev.mm
 import net.minestom.server.entity.Player
 import net.minestom.server.inventory.Inventory
@@ -8,13 +10,11 @@ import net.minestom.server.item.Material
 import net.minestom.server.tag.Tag
 
 private val menuItems: List<ItemStack> = listOf(
-    ItemStack.builder(Material.POTATO)
-        .displayName(mm("<!italic><green>Default Player"))
-        .lore(
-            mm("<!italic><gray>Targets the default player of this event.")
-        )
-        .build()
-        .withTag(Tag.String("changeSign"), "Default"),
+    DevItemBuilder()
+        .item(Material.POTATO)
+        .name("<green>Default Player")
+        .description("<gray>Targets the default player of this event.")
+        .build(SetTarget.DEFAULT)
 )
 
 fun displaySetTargetMenu(player: Player) {

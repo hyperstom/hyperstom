@@ -1,7 +1,7 @@
-import emeraldwater.infernity.dev.inventories.displayIfPlayerMenu
-import emeraldwater.infernity.dev.inventories.displayPlayerActionMenu
-import emeraldwater.infernity.dev.inventories.displayPlayerEventMenu
-import emeraldwater.infernity.dev.inventories.displaySetVariableMenu
+import emeraldwater.infernity.dev.inventories.items.displayIfPlayerMenu
+import emeraldwater.infernity.dev.inventories.items.displayPlayerActionMenu
+import emeraldwater.infernity.dev.inventories.items.displayPlayerEventMenu
+import emeraldwater.infernity.dev.inventories.items.displaySetVariableMenu
 import net.minestom.server.entity.Player
 import net.minestom.server.tag.Tag
 

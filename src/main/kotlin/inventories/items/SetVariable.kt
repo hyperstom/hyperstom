@@ -1,5 +1,6 @@
-package emeraldwater.infernity.dev.inventories
+package emeraldwater.infernity.dev.inventories.items
 
+import emeraldwater.infernity.dev.interpreter.SetTarget
 import emeraldwater.infernity.dev.mm
 import net.minestom.server.entity.Player
 import net.minestom.server.inventory.Inventory
@@ -10,17 +11,13 @@ import net.minestom.server.item.Material
 import net.minestom.server.tag.Tag
 
 private val menuItems: List<ItemStack> = listOf(
-    ItemStack.builder(Material.BRICK)
-        .displayName(mm("<red>="))
-        .lore(
-            mm("<gray>Set a variable to a new value."),
-            mm(""),
-            mm("<white>Chest Parameters:"),
-            mm("<yellow>Variable <dark_gray>- <gray>Variable to define"),
-            mm("<yellow>Any Value <dark_gray>- <gray>Value to assign to the variable"),
-        )
-        .build()
-        .withTag(Tag.String("changeSign"), "="),
+    DevItemBuilder()
+        .item(Material.BRICK)
+        .name("<red>Set Variable (=)")
+        .description("<gray>Sets a variable to a value you define")
+        .parameter(Type.VARIABLE, "Variable to set")
+        .parameter(Type.ANY_VALUE, "Value to set")
+        .build(SetTarget.DEFAULT)
 )
 
 fun displaySetVariableMenu(player: Player) {

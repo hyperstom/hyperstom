@@ -16,6 +16,8 @@ enum class PlayerEvent(override val signText: String) : EnumAction, Event {
 
 enum class PlayerAction(override val signText: String) : EnumAction {
     SEND_MESSAGE("SendMessage"),
+    SEND_ACTIONBAR("ActionBar"),
+    SEND_TITLE("Title"),
     LAUNCH_UP("LaunchUp");
 }
 
@@ -24,7 +26,7 @@ enum class SetVariable(override val signText: String) : EnumAction {
 }
 
 enum class SetTarget(override val signText: String) : EnumAction {
-    SET_EQUALS("="),;
+    DEFAULT("Default"),;
 }
 
 enum class IfPlayer(override val signText: String) : EnumAction {

@@ -74,6 +74,19 @@ object DevItems {
             mm("<white>* <dark_gray>= <gray>Optional parameter")
         )
         .build()
+
+    val ifPlayer = ItemStack.builder(Material.OAK_PLANKS)
+        .displayName(mm("<gold>If Player"))
+        .lore(
+            mm("<gray>Used to check if a condition"),
+            mm("<gray>relating to a player is true."),
+            mm(""),
+            mm("<light_purple>Examples:"),
+            mm("<dark_gray>- <gray>Check if player is standing on block"),
+            mm("<dark_gray>- <gray>Check a player's username"),
+            mm("<dark_gray>- <gray>Check if a player has an item"),
+        )
+        .build()
     /*
     Value Items
      */

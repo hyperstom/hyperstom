@@ -56,3 +56,16 @@ fun setTargetFromString(string: String): SetTarget? {
     }
     return null
 }
+
+enum class IfPlayer(val signText: String) {
+    STANDING_ON("StandingOn");
+}
+
+fun ifPlayerFromString(string: String): IfPlayer? {
+    for(entry in IfPlayer.entries) {
+        if(string == entry.signText) {
+            return entry
+        }
+    }
+    return null
+}

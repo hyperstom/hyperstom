@@ -1,3 +1,4 @@
+import emeraldwater.infernity.dev.inventories.displayIfPlayerMenu
 import emeraldwater.infernity.dev.inventories.displayPlayerActionMenu
 import emeraldwater.infernity.dev.inventories.displayPlayerEventMenu
 import emeraldwater.infernity.dev.inventories.displaySetVariableMenu
@@ -19,6 +20,9 @@ fun dispatchInventory(player: Player) {
         }
         if(block.getTag(Tag.String("line1")) == "SET TARGET") {
             displaySetTargetMenu(player)
+        }
+        if(block.getTag(Tag.String("line1")) == "IF PLAYER") {
+            displayIfPlayerMenu(player)
         }
     }
 }

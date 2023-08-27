@@ -53,3 +53,13 @@ data class SetTargetBlock(
         return """SetTarget ${this.action.signText} $args"""
     }
 }
+
+data class IfPlayerBlock(
+    val action: IfPlayer,
+    override val actions: List<Action>,
+    override val args: List<Argument>
+) : ActionContainer {
+    override fun toString(): String {
+        return """IfPlayer ${this.action.signText} $args ${this.actions}"""
+    }
+}

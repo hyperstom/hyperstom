@@ -1,5 +1,6 @@
 package emeraldwater.infernity.dev.interpreter
 
+import emeraldwater.infernity.dev.interpreter.actions.ifPlayer
 import emeraldwater.infernity.dev.interpreter.actions.playerAction
 import emeraldwater.infernity.dev.playerInterpreter
 import emeraldwater.infernity.dev.playerModes
@@ -60,6 +61,9 @@ class Interpreter(
         try {
             if(block is PlayerActionBlock) {
                 playerAction(block)
+            }
+            if(block is IfPlayerBlock) {
+                ifPlayer(block)
             }
 
         } catch(e: Exception) {

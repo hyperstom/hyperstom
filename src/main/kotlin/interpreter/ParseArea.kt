@@ -64,10 +64,10 @@ fun parseBlock(instance: Instance, getPoint: Point): ParseBlockResult {
                 if(item.getTag(Tag.String("varitem.id")) == "txt") {
                     arguments.add(Argument.Text(item.getTag(Tag.String("varitem.value"))))
                 }
-                if(item.getTag(Tag.String("varitem.id")) == "rtxt") {
+                else if(item.getTag(Tag.String("varitem.id")) == "rtxt") {
                     arguments.add(Argument.RichText(item.getTag(Tag.Component("varitem.value"))))
                 }
-                if(item.getTag(Tag.String("varitem.id")) == "num") {
+                else if(item.getTag(Tag.String("varitem.id")) == "num") {
                     arguments.add(Argument.Number(item.getTag(Tag.Double("varitem.value"))))
                 }
                 if(item.getTag(Tag.String("varitem.id")) == "var") {
@@ -75,6 +75,9 @@ fun parseBlock(instance: Instance, getPoint: Point): ParseBlockResult {
                 }
                 if(item.getTag(Tag.String("varitem.id")) == "func") {
                     arguments.add(Argument.FunctionReference(item.getTag(Tag.String("varitem.value"))))
+                }
+                else {
+                    arguments.add(Argument.Item(item!!))
                 }
             }
         }

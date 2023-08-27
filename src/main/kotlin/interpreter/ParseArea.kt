@@ -61,23 +61,13 @@ fun parseBlock(instance: Instance, getPoint: Point): ParseBlockResult {
         for(slot in 0..53) {
             val item = chest.getTag(Tag.ItemStack("barrel.slot$slot"))
             if(item != null && item != ItemStack.AIR) {
-                if(item.getTag(Tag.String("varitem.id")) == "txt") {
-                    arguments.add(Argument.Text(item.getTag(Tag.String("varitem.value"))))
-                }
-                else if(item.getTag(Tag.String("varitem.id")) == "rtxt") {
-                    arguments.add(Argument.RichText(item.getTag(Tag.Component("varitem.value"))))
-                }
-                else if(item.getTag(Tag.String("varitem.id")) == "num") {
-                    arguments.add(Argument.Number(item.getTag(Tag.Double("varitem.value"))))
-                }
-                if(item.getTag(Tag.String("varitem.id")) == "var") {
-                    arguments.add(Argument.Variable(item.getTag(Tag.String("varitem.value"))))
-                }
-                if(item.getTag(Tag.String("varitem.id")) == "func") {
-                    arguments.add(Argument.FunctionReference(item.getTag(Tag.String("varitem.value"))))
-                }
-                else {
-                    arguments.add(Argument.Item(item!!))
+                when(item.getTag(Tag.String("varitem.id"))) {
+                    "txt" -> arguments.add(Argument.Text(item.getTag(Tag.String("varitem.value"))))
+                    "rtxt" -> arguments.add(Argument.RichText(item.getTag(Tag.Component("varitem.value"))))
+                    "num" -> arguments.add(Argument.Number(item.getTag(Tag.Double("varitem.value"))))
+                    "var" -> arguments.add(Argument.Variable(item.getTag(Tag.String("varitem.value"))))
+                    "func" -> arguments.add(Argument.FunctionReference(item.getTag(Tag.String("varitem.value"))))
+                    else -> arguments.add(Argument.Item(item))
                 }
             }
         }

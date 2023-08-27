@@ -1,11 +1,10 @@
 package emeraldwater.infernity.dev
 
 import emeraldwater.infernity.dev.commands.handleCommandRegistration
-import emeraldwater.infernity.dev.events.detectRightClick
-import emeraldwater.infernity.dev.events.onBreakBlock
-import emeraldwater.infernity.dev.events.onPlaceBlock
-import emeraldwater.infernity.dev.events.overrideChat
+import emeraldwater.infernity.dev.events.*
 import emeraldwater.infernity.dev.interpreter.Interpreter
+import emeraldwater.infernity.dev.interpreter.PlayerEvent
+import emeraldwater.infernity.dev.interpreter.interpret
 import emeraldwater.infernity.dev.inventories.clickVarItem
 import emeraldwater.infernity.dev.inventories.handleBarrelClose
 import emeraldwater.infernity.dev.inventories.items.onClickItem
@@ -26,12 +25,7 @@ import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.event.inventory.InventoryClickEvent
 import net.minestom.server.event.inventory.InventoryCloseEvent
 import net.minestom.server.event.inventory.InventoryPreClickEvent
-import net.minestom.server.event.player.PlayerBlockBreakEvent
-import net.minestom.server.event.player.PlayerBlockInteractEvent
-import net.minestom.server.event.player.PlayerBlockPlaceEvent
-import net.minestom.server.event.player.PlayerChatEvent
-import net.minestom.server.event.player.PlayerLoginEvent
-import net.minestom.server.event.player.PlayerUseItemEvent
+import net.minestom.server.event.player.*
 import net.minestom.server.extras.MojangAuth
 import net.minestom.server.instance.InstanceContainer
 import net.minestom.server.instance.block.Block
@@ -96,6 +90,15 @@ object Main {
         globalEventHandler.addListener(InventoryCloseEvent::class.java) { handleBarrelClose(it) }
         globalEventHandler.addListener(PlayerUseItemEvent::class.java) { checkValuesMenu(it) }
 
+        globalEventHandler.addListener(PlayerTickEvent::class.java) {
+            it.player.interpret(PlayerEvent.TICK)
+        }
+        globalEventHandler.addListener(PlayerStartSneakingEvent::class.java) {
+            it.player.interpret(PlayerEvent.SNEAK)
+        }
+        globalEventHandler.addListener(PlayerSwapItemEvent::class.java) {
+            it.player.interpret(PlayerEvent.SWAP_HANDS)
+        }
     }
 }
 

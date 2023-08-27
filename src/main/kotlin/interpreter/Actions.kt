@@ -11,7 +11,10 @@ interface Event : EnumAction {
 }
 enum class PlayerEvent(override val signText: String) : EnumAction, Event {
     JOIN("Join"),
-    LEAVE("Leave");
+    LEAVE("Leave"),
+    SNEAK("Sneak"),
+    TICK("Tick"),
+    SWAP_HANDS("SwapHands");
 }
 
 enum class PlayerAction(override val signText: String) : EnumAction {

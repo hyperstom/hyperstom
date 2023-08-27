@@ -1,5 +1,6 @@
 package emeraldwater.infernity.dev.plots
 
+import emeraldwater.infernity.dev.instanceHub
 import emeraldwater.infernity.dev.interpreter.*
 import emeraldwater.infernity.dev.items.DevItems
 import emeraldwater.infernity.dev.playerInterpreter
@@ -14,6 +15,7 @@ import net.minestom.server.instance.InstanceContainer
 import net.minestom.server.instance.block.Block
 import net.minestom.server.world.DimensionType
 import java.io.File
+import java.lang.IllegalArgumentException
 import java.util.concurrent.CompletableFuture
 import kotlin.io.path.Path
 
@@ -111,17 +113,32 @@ data class Plot(val id: Int) {
     }
     fun joinInstance(player: Player) {
         player.sendMessage("Taking you to plot ID #$id...")
-        val future = player.setInstance(buildInstance)
-        playerModes[player.username] = PlotState(id, PlotMode.PLAY)
-        future.thenRun {
-            player.sendMessage("You have joined plot ID #$id")
-            player.teleport(Pos(0.5, 52.0, 0.5))
-            player.setGameMode(GameMode.SURVIVAL)
-            player.inventory.clear()
+        try {
+            player.setInstance(instanceHub).thenRun {
+                player.setInstance(buildInstance).thenRun {
+                    playerModes[player.username] = PlotState(id, PlotMode.PLAY)
+                    player.sendMessage("You have joined plot ID #$id")
+                    player.teleport(Pos(0.5, 52.0, 0.5))
+                    player.setGameMode(GameMode.SURVIVAL)
+                    player.inventory.clear()
 
-            playerInterpreter[player.username] = Interpreter(devActionContainers, player)
-            player.interpret(PlayerEvent.JOIN)
+                    playerInterpreter[player.username] = Interpreter(devActionContainers, player)
+                    player.interpret(PlayerEvent.JOIN)
+                }
+            }
+        } catch(e: IllegalArgumentException) {
+            player.setInstance(buildInstance).thenRun {
+                playerModes[player.username] = PlotState(id, PlotMode.PLAY)
+                player.sendMessage("You have joined plot ID #$id")
+                player.teleport(Pos(0.5, 52.0, 0.5))
+                player.setGameMode(GameMode.SURVIVAL)
+                player.inventory.clear()
+
+                playerInterpreter[player.username] = Interpreter(devActionContainers, player)
+                player.interpret(PlayerEvent.JOIN)
+            }
         }
+
     }
 
     fun joinDev(player: Player) {

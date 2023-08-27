@@ -4,6 +4,7 @@ import emeraldwater.infernity.dev.interpreter.actions.ifPlayer
 import emeraldwater.infernity.dev.interpreter.actions.playerAction
 import emeraldwater.infernity.dev.playerInterpreter
 import emeraldwater.infernity.dev.playerModes
+import emeraldwater.infernity.dev.plots.PlotMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -11,9 +12,12 @@ import net.minestom.server.entity.Player
 
 fun Player.interpret(event: Event) = run {
     val player = this
-    playerInterpreter[player.username]?.interpreterScope?.launch {
-        playerInterpreter[player.username]?.interpretEvent(event)
+    if(playerModes[player.username]?.mode == PlotMode.PLAY) {
+        playerInterpreter[player.username]?.interpreterScope?.launch {
+            playerInterpreter[player.username]?.interpretEvent(event)
+        }
     }
+
 }
 
 class Interpreter(
@@ -41,7 +45,7 @@ class Interpreter(
 
     /**
      * Interpret an individual container.
-     * @param event The event to parse.
+     * @param event The event to parse.1
      */
     fun interpretEvent(event: Event) {
         val localVariables: MutableMap<String, Argument> = mutableMapOf()

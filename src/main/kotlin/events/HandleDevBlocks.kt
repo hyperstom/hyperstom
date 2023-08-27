@@ -27,7 +27,7 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
 
     when(event.block) {
         Block.COBBLESTONE, Block.IRON_BLOCK -> {}
-        Block.TARGET, Block.DIAMOND_BLOCK, Block.LAPIS_BLOCK -> { width = 4 }
+        Block.TARGET, Block.DIAMOND_BLOCK, Block.LAPIS_BLOCK, Block.OAK_PLANKS -> { width = 4 }
         else -> {
             placed = false
             event.isCancelled = true

@@ -2,6 +2,7 @@ package emeraldwater.infernity.dev.events
 
 import dispatchInventory
 import emeraldwater.infernity.dev.barrelName
+import emeraldwater.infernity.dev.inventories.openVarMenu
 import emeraldwater.infernity.dev.mm
 import emeraldwater.infernity.dev.playerModes
 import emeraldwater.infernity.dev.playerTargets
@@ -53,5 +54,9 @@ fun detectRightClick(event: PlayerBlockInteractEvent) {
                 }
             }
         }
+    }
+
+    if(player.itemInMainHand.getTag(Tag.String("varitem.id")) == "var" && player.isSneaking) {
+        openVarMenu(player)
     }
 }

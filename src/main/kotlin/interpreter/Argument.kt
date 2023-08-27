@@ -10,13 +10,15 @@ sealed class Argument {
     class Number(val value: Double) : Argument()
     class Item(val value: ItemStack) : Argument()
     class FunctionReference(val value: String) : Argument()
+    class Variable(val name: String) : Argument()
     override fun toString(): String {
         return when(this) {
             is Text -> "\"$value\""
             is RichText -> "$\"${MiniMessage.miniMessage().serialize(value)}<reset>\""
             is Number -> "$value"
             is Item -> "${value.displayName}"
-            is FunctionReference -> "&\"$value\""
+            is FunctionReference -> "&func[$value]"
+            is Variable -> "&var[$name]"
         }
     }
 }

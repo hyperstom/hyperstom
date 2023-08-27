@@ -14,6 +14,8 @@ fun checkValuesMenu(event: PlayerUseItemEvent) {
                 DevItems.text,
                 DevItems.richText,
                 DevItems.number,
+                DevItems.variable,
+                DevItems.func,
                 DevItems.debugStick,
             ),
             TransactionOption.ALL

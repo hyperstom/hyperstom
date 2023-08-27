@@ -130,6 +130,32 @@ object DevItems {
         .withTag(Tag.String("varitem.id"), "num")
         .withTag(Tag.Double("varitem.value"), 0.0)
 
+    val variable = ItemStack.builder(Material.MAGMA_CREAM)
+        .displayName(mm("<yellow>Variable"))
+        .lore(
+            mm("<gray>Represents a variable."),
+            mm(""),
+            mm("<light_purple>How to change value:"),
+            mm("<gray>Type the new value in chat.")
+        )
+        .build()
+        .withTag(Tag.String("varitem.id"), "var")
+        .withTag(Tag.String("varitem.value"), "")
+        .withTag(Tag.String("varitem.value.lifetime"), "block")
+        .withTag(Tag.String("varitem.value.mutable"), "true")
+
+    val func = ItemStack.builder(Material.LAPIS_LAZULI)
+        .displayName(mm("<blue>Function"))
+        .lore(
+            mm("<gray>Represents a reference to a function."),
+            mm(""),
+            mm("<light_purple>How to change value:"),
+            mm("<gray>Type the new value in chat.")
+        )
+        .build()
+        .withTag(Tag.String("varitem.id"), "func")
+        .withTag(Tag.String("varitem.value"), "")
+
     val debugStick = ItemStack.builder(Material.STICK)
         .displayName(mm("<red>Debug Stick"))
         .build()

@@ -39,4 +39,39 @@ fun handleEditItem(event: PlayerChatEvent) {
         }
 
     }
+    if(item.getTag(Tag.String("varitem.id")) == "var") {
+        event.isCancelled = true
+        val lifetime = player.itemInMainHand.getTag(Tag.String("varitem.value.lifetime"))
+        val mutability = player.itemInMainHand.getTag(Tag.String("varitem.value.mutable"))
+        player.itemInMainHand = item
+            .withDisplayName(mm("<yellow>" + event.message))
+            .withLore(listOf(handleVarLore(lifetime, mutability)))
+            .withTag(Tag.String("varitem.value"), event.message)
+    }
+    if(item.getTag(Tag.String("varitem.id")) == "func") {
+        event.isCancelled = true
+        player.itemInMainHand = item
+            .withDisplayName(mm("<blue>" + event.message))
+            .withLore(listOf())
+            .withTag(Tag.String("varitem.value"), event.message)
+    }
+}
+
+fun handleVarLore(lifetime: String, mutability: String): Component {
+    var output = ""
+    if(mutability == "true") {
+        output += "<#ffd42a>MUTABLE "
+    } else {
+        output += "<#ff5500>IMMUTABLE "
+    }
+    if(lifetime == "persistent") {
+        output += "<yellow>PERSISTENT "
+    }
+    if(lifetime == "global") {
+        output += "<green>GLOBAL "
+    }
+    if(lifetime == "block") {
+        output += "<blue>BLOCK "
+    }
+    return mm(output)
 }

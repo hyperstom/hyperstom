@@ -21,6 +21,10 @@ class Interpreter(
 ) {
     val interpreterScope = CoroutineScope(Dispatchers.Default)
     val functions: Map<String, ActionContainer>
+    val localFunctions: Map<String, ActionContainer> = mutableMapOf()
+
+    val globalVariables: Map<String, Argument> = mutableMapOf()
+
     init {
         functions = mutableMapOf()
         for(container in containers) {
@@ -35,22 +39,24 @@ class Interpreter(
     }
 
     fun interpretEvent(event: Event) {
+        val localVariables: MutableMap<String, Argument> = mutableMapOf()
         for(container in containers) {
             if(container is PlayerEventBlock && event is PlayerEvent) {
                 if(container.action == event) {
-                    interpretContainer(container)
+                    interpretContainer(container, localVariables)
                 }
             }
         }
     }
 
-    fun interpretContainer(container: ActionContainer) {
+    fun interpretContainer(container: ActionContainer, vars: MutableMap<String, Argument>) {
+        val containerScope: MutableMap<String, Argument> = mutableMapOf()
         for(action in container.actions) {
-            interpretBlock(action)
+            interpretBlock(action, vars, containerScope)
         }
     }
 
-    fun interpretBlock(block: Action) {
+    fun interpretBlock(block: Action, localVariables: MutableMap<String, Argument>, blockVariables: MutableMap<String, Argument>) {
         try {
             if(block is PlayerActionBlock) {
                 playerAction(block)

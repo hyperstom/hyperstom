@@ -22,7 +22,8 @@ enum class PlayerAction(override val signText: String) : EnumAction {
 }
 
 enum class SetVariable(override val signText: String) : EnumAction {
-    SET_EQUALS("="),;
+    SET_EQUALS("="),
+    ;
 }
 
 enum class SetTarget(override val signText: String) : EnumAction {

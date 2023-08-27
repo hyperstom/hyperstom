@@ -6,6 +6,7 @@ import emeraldwater.infernity.dev.events.onBreakBlock
 import emeraldwater.infernity.dev.events.onPlaceBlock
 import emeraldwater.infernity.dev.events.overrideChat
 import emeraldwater.infernity.dev.interpreter.Interpreter
+import emeraldwater.infernity.dev.inventories.clickVarItem
 import emeraldwater.infernity.dev.inventories.handleBarrelClose
 import emeraldwater.infernity.dev.inventories.items.onClickItem
 import emeraldwater.infernity.dev.items.checkValuesMenu
@@ -24,6 +25,7 @@ import net.minestom.server.entity.metadata.display.TextDisplayMeta
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.event.inventory.InventoryClickEvent
 import net.minestom.server.event.inventory.InventoryCloseEvent
+import net.minestom.server.event.inventory.InventoryPreClickEvent
 import net.minestom.server.event.player.PlayerBlockBreakEvent
 import net.minestom.server.event.player.PlayerBlockInteractEvent
 import net.minestom.server.event.player.PlayerBlockPlaceEvent
@@ -88,6 +90,7 @@ object Main {
         }
         globalEventHandler.addListener(PlayerBlockBreakEvent::class.java) { onBreakBlock(it) }
         globalEventHandler.addListener(PlayerBlockPlaceEvent::class.java) { onPlaceBlock(it) }
+        globalEventHandler.addListener(InventoryPreClickEvent::class.java) { clickVarItem(it) }
         globalEventHandler.addListener(InventoryClickEvent::class.java) { onClickItem(it) }
         globalEventHandler.addListener(PlayerChatEvent::class.java) { overrideChat(it); handleEditItem(it); }
         globalEventHandler.addListener(InventoryCloseEvent::class.java) { handleBarrelClose(it) }

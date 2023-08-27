@@ -1,6 +1,7 @@
 package emeraldwater.infernity.dev.inventories.items
 
 import emeraldwater.infernity.dev.interpreter.SetTarget
+import emeraldwater.infernity.dev.interpreter.SetVariable
 import emeraldwater.infernity.dev.mm
 import net.minestom.server.entity.Player
 import net.minestom.server.inventory.Inventory
@@ -17,7 +18,7 @@ private val menuItems: List<ItemStack> = listOf(
         .description("<gray>Sets a variable to a value you define")
         .parameter(Type.VARIABLE, "Variable to set")
         .parameter(Type.ANY_VALUE, "Value to set")
-        .build(SetTarget.DEFAULT)
+        .build(SetVariable.SET_EQUALS)
 )
 
 fun displaySetVariableMenu(player: Player) {

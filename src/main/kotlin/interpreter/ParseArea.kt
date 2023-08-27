@@ -70,6 +70,12 @@ fun parseBlock(instance: Instance, getPoint: Point): ParseBlockResult {
                 if(item.getTag(Tag.String("varitem.id")) == "num") {
                     arguments.add(Argument.Number(item.getTag(Tag.Double("varitem.value"))))
                 }
+                if(item.getTag(Tag.String("varitem.id")) == "var") {
+                    arguments.add(Argument.Variable(item.getTag(Tag.String("varitem.value"))))
+                }
+                if(item.getTag(Tag.String("varitem.id")) == "func") {
+                    arguments.add(Argument.FunctionReference(item.getTag(Tag.String("varitem.value"))))
+                }
             }
         }
 

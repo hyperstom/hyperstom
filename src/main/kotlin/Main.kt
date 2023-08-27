@@ -5,6 +5,7 @@ import emeraldwater.infernity.dev.events.detectRightClick
 import emeraldwater.infernity.dev.events.onBreakBlock
 import emeraldwater.infernity.dev.events.onPlaceBlock
 import emeraldwater.infernity.dev.events.overrideChat
+import emeraldwater.infernity.dev.interpreter.Interpreter
 import emeraldwater.infernity.dev.inventories.handleBarrelClose
 import emeraldwater.infernity.dev.inventories.onClickItem
 import emeraldwater.infernity.dev.items.checkValuesMenu
@@ -39,7 +40,7 @@ import net.minestom.server.world.DimensionType
 lateinit var instanceHub: InstanceContainer
 var playerModes = mutableMapOf<String, PlotState>()
 var playerTargets = mutableMapOf<String, Point>()
-
+var playerInterpreter = mutableMapOf<String, Interpreter>()
 fun mm(string: String) = MiniMessage.miniMessage().deserialize("<!italic>$string")
 
 val barrelName = mm("Block Arguments")

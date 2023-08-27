@@ -2,8 +2,10 @@ package emeraldwater.infernity.dev.commands
 
 import emeraldwater.infernity.dev.instanceHub
 import emeraldwater.infernity.dev.interpreter.parseDevArea
+import emeraldwater.infernity.dev.mm
 import emeraldwater.infernity.dev.playerModes
 import emeraldwater.infernity.dev.plots.*
+import kotlinx.coroutines.*
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.minestom.server.MinecraftServer
 import net.minestom.server.command.builder.Command
@@ -11,6 +13,7 @@ import net.minestom.server.command.builder.arguments.ArgumentType
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Handles logic for "joining plot 0" or the /leave command.
@@ -26,6 +29,7 @@ fun handleLeavingLogic(player: Player){
     player.gameMode = GameMode.SURVIVAL
     future.thenRun {
         player.teleport(Pos(0.0, 52.0, 0.0))
+        player.inventory.clear()
     }
 }
 
@@ -40,12 +44,19 @@ fun handleJoinCommandLogic(player: Player, id: Int) {
         handleLeavingLogic(player)
         return
     }
+    player.sendMessage("Alright! Taking you to the plot in a few moments... ${filtered}")
     if(filtered.size == 1) {
         val plot = filtered[0]
         plot.joinInstance(player)
     } else {
+        player.sendMessage("This is the first time we're booting up this plot! Give us a few seconds...")
         val plot = Plot(id)
-        plot.joinInstance(player)
+        player.sendMessage("Plot loaded! Starting thread...")
+        plot.plotScope.launch {
+            delay(3000L)
+            player.sendMessage("You're good to go!")
+            plot.joinInstance(player)
+        }
     }
 }
 
@@ -68,11 +79,7 @@ object PlayCommand : Command("play") {
             val player = sender as Player
             val mode = playerModes[player.username]!!
             if (mode.mode != PlotMode.IN_HUB) {
-            playerModes[player.username] = PlotState(mode.id, PlotMode.PLAY)
-            try { player.setInstance(filterPlot(mode.id).buildInstance) } catch(_: Exception) {}
-            player.teleport(Pos(1.0, 52.0, 1.0))
-            player.setGameMode(GameMode.SURVIVAL)
-            player.inventory.clear()
+                filterPlot(mode.id).joinInstance(player)
             } else {
                 player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must provide a plot id, or be on a plot to enter play mode!"))
             }
@@ -147,7 +154,7 @@ object DebugCommand : Command("debug"){
             if(debugInfoToGet == "parseDevArea") {
                 sender.sendMessage("Parsing dev area...")
                 val headers = parseDevArea(player.instance!!)
-                sender.sendMessage("Headers:\n$headers")
+                sender.sendMessage(mm("Headers:\n<click:copy_to_clipboard:$headers>$headers</click>"))
             }
         }, debugInfo)
     }

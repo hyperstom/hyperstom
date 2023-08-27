@@ -1,9 +1,13 @@
 package emeraldwater.infernity.dev.plots
 
-import emeraldwater.infernity.dev.interpreter.Header
+import emeraldwater.infernity.dev.interpreter.ActionContainer
+import emeraldwater.infernity.dev.interpreter.Interpreter
+import emeraldwater.infernity.dev.interpreter.PlayerEvent
 import emeraldwater.infernity.dev.interpreter.parseDevArea
 import emeraldwater.infernity.dev.items.DevItems
+import emeraldwater.infernity.dev.playerInterpreter
 import emeraldwater.infernity.dev.playerModes
+import kotlinx.coroutines.*
 import net.hollowcube.polar.PolarLoader
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Pos
@@ -15,15 +19,13 @@ import net.minestom.server.world.DimensionType
 import java.io.File
 import java.util.concurrent.CompletableFuture
 import kotlin.io.path.Path
-import kotlinx.coroutines.*
-import kotlin.Exception
 
 var plots = mutableListOf<Plot>()
 
 data class Plot(val id: Int) {
     var buildInstance: InstanceContainer
     var devInstance: InstanceContainer
-    var devHeaders: List<Header> = listOf()
+    var devActionContainers: List<ActionContainer> = listOf()
     val plotScope = CoroutineScope(Dispatchers.Default)
     init {
         val instanceManager = MinecraftServer.getInstanceManager()
@@ -61,6 +63,7 @@ data class Plot(val id: Int) {
 
             }
         }
+
         buildInstance.chunkLoader = PolarLoader(Path("./worlds/build-$id.polar"))
         buildInstance.worldBorder.centerX = 64.0f
         buildInstance.worldBorder.centerZ = 64.0f
@@ -68,8 +71,8 @@ data class Plot(val id: Int) {
         buildInstance.worldBorder.warningBlocks = 0
         buildInstance.worldBorder.warningTime = 0
 
-        devInstance.chunkLoader = PolarLoader(Path("./worlds/dev-$id.polar"))
 
+        devInstance.chunkLoader = PolarLoader(Path("./worlds/dev-$id.polar"))
 
         plots.add(this@Plot)
 
@@ -80,10 +83,21 @@ data class Plot(val id: Int) {
 
     suspend fun savePlot() {
         var iter = 0
+        for(sx in 0 downTo -1) {
+            for(sz in 0..9) {
+                withContext(Dispatchers.IO) {
+                    devInstance.loadChunk(sx, sz).get()
+                }
+            }
+        }
+
+
+        devActionContainers = parseDevArea(devInstance)
+
         while(true) {
             iter++
             try {
-                devHeaders = parseDevArea(devInstance)
+                devActionContainers = parseDevArea(devInstance)
             } catch(e: Exception) {}
 
             if(iter%4 == 0) {
@@ -106,6 +120,10 @@ data class Plot(val id: Int) {
             player.sendMessage("You have joined plot ID #$id")
             player.teleport(Pos(0.5, 52.0, 0.5))
             player.setGameMode(GameMode.SURVIVAL)
+            player.inventory.clear()
+
+            playerInterpreter[player.username] = Interpreter(devActionContainers, player)
+            playerInterpreter[player.username]?.interpretEvent(PlayerEvent.JOIN)
         }
     }
 

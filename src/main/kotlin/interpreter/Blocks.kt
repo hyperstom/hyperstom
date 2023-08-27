@@ -4,42 +4,52 @@ interface Action {
     val args: List<Argument>
 }
 
-interface Header {
+interface ActionContainer : Action {
     val actions: List<Action>
 }
 
-class PlayerEventBlock(
+data class PlayerEventBlock(
     val action: PlayerEvent,
-    override val actions: List<Action>
-) : Header {
+    override val actions: List<Action>,
+    override val args: List<Argument> = listOf(),
+) : ActionContainer {
     override fun toString(): String {
-        return """PlayerEvent: ${this.action.signText} { ${this.actions} }"""
+        return """PlayerEvent ${this.action.signText}${this.args} ${this.actions}"""
     }
 }
 
-class PlayerActionBlock(
+data class FunctionDefinitionBlock(
+    override val actions: List<Action>,
+    override val args: List<Argument> = listOf(),
+) : ActionContainer {
+    override fun toString(): String {
+        return """Function ${this.args} ${this.actions}"""
+    }
+}
+
+data class PlayerActionBlock(
     val action: PlayerAction,
     override val args: List<Argument>
 ) : Action {
     override fun toString(): String {
-        return """PlayerAction: ${this.action.signText} $args;"""
+        return """PlayerAction: ${this.action.signText} $args"""
     }
 }
 
-class SetVariableBlock(
+data class SetVariableBlock(
     val action: SetVariable,
     override val args: List<Argument>
 ) : Action {
     override fun toString(): String {
-        return """SetVariable: ${this.action.signText} $args;"""
+        return """SetVariable ${this.action.signText} $args"""
     }
 }
 
-class SetTargetBlock(
+data class SetTargetBlock(
     val action: SetTarget,
     override val args: List<Argument>
 ) : Action {
     override fun toString(): String {
-        return """SetTarget: ${this.action.signText} $args;"""
+        return """SetTarget ${this.action.signText} $args"""
     }
 }

@@ -26,10 +26,8 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
     var width = 2
 
     when(event.block) {
-        Block.DIAMOND_BLOCK -> {}
-        Block.COBBLESTONE -> {}
-        Block.IRON_BLOCK -> {}
-        Block.TARGET -> { width = 4 }
+        Block.COBBLESTONE, Block.IRON_BLOCK -> {}
+        Block.TARGET, Block.DIAMOND_BLOCK, Block.LAPIS_BLOCK -> { width = 4 }
         else -> {
             placed = false
             event.isCancelled = true
@@ -57,8 +55,16 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
     when(event.block) {
         Block.DIAMOND_BLOCK -> {
             event.player.instance.setBlock(x, y, z, Block.DIAMOND_BLOCK.withTag(Tag.String("codeBlockType"), "block"))
-            event.player.instance.setBlock(x, y, z+1, Block.STONE)
+            event.player.instance.setBlock(x, y, z+1, Block.PISTON.withProperty("facing", "south"))
+            event.player.instance.setBlock(x, y, z+3, Block.PISTON.withProperty("facing", "north"))
             event.player.instance.setBlock(x-1, y, z, signWithLines("PLAYER EVENT"))
+        }
+        Block.LAPIS_BLOCK -> {
+            event.player.instance.setBlock(x, y, z, Block.LAPIS_BLOCK.withTag(Tag.String("codeBlockType"), "block"))
+            event.player.instance.setBlock(x, y, z+1, Block.PISTON.withProperty("facing", "south"))
+            event.player.instance.setBlock(x, y, z+3, Block.PISTON.withProperty("facing", "north"))
+            event.player.instance.setBlock(x, y+1, z, Block.BARREL)
+            event.player.instance.setBlock(x-1, y, z, signWithLines("FUNCTION"))
         }
         Block.COBBLESTONE -> {
             event.player.instance.setBlock(x, y, z, Block.COBBLESTONE.withTag(Tag.String("codeBlockType"), "block"))
@@ -71,6 +77,13 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
             event.player.instance.setBlock(x, y, z+1, Block.STONE)
             event.player.instance.setBlock(x, y+1, z, Block.BARREL)
             event.player.instance.setBlock(x-1, y, z, signWithLines("SET VARIABLE"))
+        }
+        Block.OAK_PLANKS -> {
+            event.player.instance.setBlock(x, y, z, Block.OAK_PLANKS.withTag(Tag.String("codeBlockType"), "block"))
+            event.player.instance.setBlock(x, y, z+1, Block.PISTON.withProperty("facing", "south"))
+            event.player.instance.setBlock(x, y, z+3, Block.PISTON.withProperty("facing", "north"))
+            event.player.instance.setBlock(x, y+1, z, Block.BARREL)
+            event.player.instance.setBlock(x-1, y, z, signWithLines("IF PLAYER"))
         }
         Block.TARGET -> {
             event.player.instance.setBlock(x, y, z, Block.TARGET.withTag(Tag.String("codeBlockType"), "block"))
@@ -94,7 +107,6 @@ fun breakDevBlock(event: PlayerBlockBreakEvent) {
     val y = event.blockPosition.blockY()
     val z = event.blockPosition.blockZ()
 
-    println(event.block.getTag(Tag.String("codeBlockType")))
     var placed = true
     if(event.player.itemInMainHand == DevItems.debugStick && event.block != Block.WHITE_STAINED_GLASS && event.block != Block.GRAY_STAINED_GLASS) {
         event.isCancelled = false

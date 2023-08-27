@@ -27,6 +27,7 @@ fun checkValuesMenu(event: PlayerUseItemEvent) {
                 DevItems.playerAction,
                 DevItems.setVariable,
                 DevItems.setTarget,
+                DevItems.function,
             ),
             TransactionOption.ALL
         )

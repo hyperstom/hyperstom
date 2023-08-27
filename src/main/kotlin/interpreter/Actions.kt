@@ -1,5 +1,8 @@
 package emeraldwater.infernity.dev.interpreter
 
+sealed class Event {
+    class PlayerEvent(val event: emeraldwater.infernity.dev.interpreter.PlayerEvent) : Event()
+}
 enum class PlayerEvent(val signText: String) {
     JOIN("Join"),
     LEAVE("Leave");

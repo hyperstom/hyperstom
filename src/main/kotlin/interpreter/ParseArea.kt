@@ -6,40 +6,56 @@ import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
 import net.minestom.server.item.ItemStack
 import net.minestom.server.tag.Tag
+import kotlin.math.hypot
 
-fun parseDevArea(instance: Instance): List<Header> {
-    val headers = mutableListOf<Header>()
+data class ParseBlockResult(val point: Point, val action: List<Action>)
+
+fun parseDevArea(instance: Instance): List<ActionContainer> {
+    val actionContainers = mutableListOf<ActionContainer>()
     for(x in -0 downTo -20 step 3) {
-        for(z in 0..128) {
+        for(z in 0..0) {
             for(y in 2..255 step 5) {
                 val block = instance.getBlock(x, y, z)
                 if(block.name() == "minecraft:diamond_block") {
                     val event = instance.getBlock(x-1, y, z).getTag(Tag.String("line2"))
-                    println("event: $event | playerEventFromString: ${playerEventFromString(event)}")
                     if(event != null && playerEventFromString(event) != null) {
-                        val actions = parseLine(instance, Vec(x.toDouble(), y.toDouble(), z.toDouble()))
-                        headers.add(PlayerEventBlock(
+                        val (_, actions) = parseBlock(instance, Vec(x.toDouble(), y.toDouble(), z.toDouble()))
+                        actionContainers.add(PlayerEventBlock(
                             playerEventFromString(event)!!,
                             actions
+                        ))
+                    }
+                }
+                if(block.name() == "minecraft:lapis_block") {
+                    val event = instance.getBlock(x-1, y, z).getTag(Tag.String("line2"))
+                    if(event != null) {
+                        val (_, actions) = parseBlock(instance, Vec(x.toDouble(), y.toDouble(), z.toDouble()))
+                        actionContainers.add(FunctionDefinitionBlock(
+                            actions,
+                            listOf()
                         ))
                     }
                 }
             }
         }
     }
-    return headers
+    return actionContainers
 }
 
-fun parseLine(instance: Instance, getPoint: Point): List<Action> {
+fun parseBlock(instance: Instance, getPoint: Point): ParseBlockResult {
     var point = getPoint
     val actions = mutableListOf<Action>()
+    var counter = 1
     while(true) {
         point = point.withZ(point.z() + 2.0)
         val block = instance.getBlock(point)
         val stone = instance.getBlock(point.withZ(point.z() + 1.0))
         val chest = instance.getBlock(point.withY(point.y() + 1.0))
         val sign = instance.getBlock(point.withX(point.x() - 1.0))
-        if(stone == Block.AIR) break
+        if(stone == Block.PISTON.withProperty("facing", "north")) counter--
+        if(stone == Block.PISTON.withProperty("facing", "south")) counter++
+        if(stone == Block.AIR || (counter == 0 && stone == Block.PISTON.withProperty("facing", "north")))
+            return ParseBlockResult(point, actions)
         val line2 = sign.getTag(Tag.String("line2"))
 
         val arguments = mutableListOf<Argument>()
@@ -75,7 +91,26 @@ fun parseLine(instance: Instance, getPoint: Point): List<Action> {
                 ))
             }
         }
+        if(block.name() == "minecraft:lapis_block") {
+            if(line2 != null) {
+                val (point2, actions2) = parseBlock(instance, point)
+                val func = FunctionDefinitionBlock(
+                    actions2,
+                    arguments,
+                )
+                actions.add(func)
+                point = point2
+            }
+        }
+        if(block.name() == "minecraft:target_block") {
+            if(line2 != null && setTargetFromString(line2) != null) {
+                actions.add(SetTargetBlock(
+                    setTargetFromString(line2)!!,
+                    arguments
+                ))
+            }
+        }
     }
-    return actions
+    return ParseBlockResult(point, actions)
 
 }

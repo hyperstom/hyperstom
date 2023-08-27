@@ -50,7 +50,7 @@ object DevItems {
         .build()
 
     val setTarget = ItemStack.builder(Material.TARGET)
-        .displayName(mm("<magenta>Set Target"))
+        .displayName(mm("<light_purple>Set Target"))
         .lore(
             mm("<gray>Represents an action that changes this"),
             mm("<gray>line's target."),
@@ -58,6 +58,20 @@ object DevItems {
             mm("<light_purple>Examples:"),
             mm("<dark_gray>- <gray>Select a player by name"),
             mm("<dark_gray>- <gray>Select an entity by tag"),
+        )
+        .build()
+
+    val function = ItemStack.builder(Material.LAPIS_BLOCK)
+        .displayName(mm("<blue>Define Function"))
+        .lore(
+            mm("<gray>Define a new function."),
+            mm(""),
+            mm("<white>Chest Parameters:"),
+            mm("<blue>Function <dark_gray>- <gray>What function reference to"),
+            mm("<gray>store it in"),
+            mm("<blue>Parameter(s)<white>* <dark_gray>- <gray>Parameters to the function"),
+            mm(""),
+            mm("<white>* <dark_gray>= <gray>Optional parameter")
         )
         .build()
     /*

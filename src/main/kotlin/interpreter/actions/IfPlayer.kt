@@ -7,13 +7,26 @@ import net.minestom.server.coordinate.Point
 import net.minestom.server.instance.block.Block
 import kotlin.time.Duration
 
-fun Interpreter.ifPlayer(block: IfPlayerBlock) {
+/**
+ * Represents interpreting an if player.
+ * @param block The player action block
+ * @param localVariables The local variables of this scope
+ * @param blockVariables The block variables unique to this block
+ */
+fun Interpreter.ifPlayer(block: IfPlayerBlock, localVariables: MutableMap<String, Argument>, blockVariables: MutableMap<String, Argument>) {
     when(block.action) {
         IfPlayer.STANDING_ON -> {
             var blockPos = playerTarget.position.add(0.0, -0.06, 0.0)
-            var itemStack = playerTarget.instance.getBlock(playerTarget.position.add(0.0, -0.5, 0.0)).registry()!!.material()
-            if (block.args.contains(itemStack as Argument.Item)){
-                interpretContainer(block)
+            val material = playerTarget.instance.getBlock(playerTarget.position.add(0.0, -0.5, 0.0)).registry().material()
+            var runBlock = false
+            for(arg in block.args) {
+                if(arg is Argument.Item) {
+                    if(arg.value.material() == material) {
+                        runBlock = true
+                        interpretContainer(block, localVariables)
+                        return
+                    }
+                }
             }
         }
     }

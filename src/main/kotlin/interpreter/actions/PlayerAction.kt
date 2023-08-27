@@ -8,7 +8,13 @@ import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.TitlePart
 import kotlin.time.Duration
 
-fun Interpreter.playerAction(block: PlayerActionBlock) {
+/**
+ * Represents interpreting a player action.
+ * @param block The player action block
+ * @param localVariables The local variables of this scope
+ * @param blockVariables The block variables unique to this block
+ */
+fun Interpreter.playerAction(block: PlayerActionBlock, localVariables: MutableMap<String, Argument>, blockVariables: MutableMap<String, Argument>) {
     when(block.action) {
         PlayerAction.SEND_MESSAGE -> {
             val text = block.args.getOrNull(0)

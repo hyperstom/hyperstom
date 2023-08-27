@@ -39,6 +39,10 @@ class Interpreter(
         playerTarget.sendMessage("containers: $containers")
     }
 
+    /**
+     * Interpret an individual container.
+     * @param event The event to parse.
+     */
     fun interpretEvent(event: Event) {
         val localVariables: MutableMap<String, Argument> = mutableMapOf()
         for(container in containers) {
@@ -50,20 +54,32 @@ class Interpreter(
         }
     }
 
+    /**
+     * Interpret an individual container.
+     * @param container The container to parse.
+     * @param vars Local variables in this scope
+     */
     fun interpretContainer(container: ActionContainer, vars: MutableMap<String, Argument>) {
+        // Create the new scope for the container
         val containerScope: MutableMap<String, Argument> = mutableMapOf()
         for(action in container.actions) {
             interpretBlock(action, vars, containerScope)
         }
     }
 
+    /**
+     * Interpret an individual block.
+     * @param block The block to parse.
+     * @param localVariables Local variables in this scope
+     * @param blockVariables The variables unique to this container
+     */
     fun interpretBlock(block: Action, localVariables: MutableMap<String, Argument>, blockVariables: MutableMap<String, Argument>) {
         try {
             if(block is PlayerActionBlock) {
-                playerAction(block)
+                playerAction(block, localVariables, blockVariables)
             }
             if(block is IfPlayerBlock) {
-                ifPlayer(block)
+                ifPlayer(block, localVariables, blockVariables)
             }
 
         } catch(e: Exception) {

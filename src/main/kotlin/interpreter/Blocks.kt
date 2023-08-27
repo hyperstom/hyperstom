@@ -63,3 +63,13 @@ data class IfPlayerBlock(
         return """IfPlayer ${this.action.signText} $args ${this.actions}"""
     }
 }
+
+data class IfVariableBlock(
+    val action: IfVariable,
+    override val actions: List<Action>,
+    override val args: List<Argument>,
+) : ActionContainer {
+    override fun toString(): String {
+        return """IfVar ${this.action.signText} $args ${this.actions}"""
+    }
+}

@@ -13,6 +13,8 @@ import net.minestom.server.command.builder.arguments.ArgumentType
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player
+import net.minestom.server.potion.Potion
+import net.minestom.server.potion.PotionEffect
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -53,7 +55,10 @@ fun handleJoinCommandLogic(player: Player, id: Int) {
         val plot = Plot(id)
         player.sendMessage("Plot loaded! Starting thread...")
         plot.plotScope.launch {
-            delay(3000L)
+            delay(2000L)
+            player.addEffect(Potion(PotionEffect.BLINDNESS, 1, 1))
+            plot.joinDev(player)
+            delay(100L)
             player.sendMessage("You're good to go!")
             plot.joinInstance(player)
         }

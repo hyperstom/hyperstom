@@ -1,9 +1,6 @@
 package emeraldwater.infernity.dev.plots
 
-import emeraldwater.infernity.dev.interpreter.ActionContainer
-import emeraldwater.infernity.dev.interpreter.Interpreter
-import emeraldwater.infernity.dev.interpreter.PlayerEvent
-import emeraldwater.infernity.dev.interpreter.parseDevArea
+import emeraldwater.infernity.dev.interpreter.*
 import emeraldwater.infernity.dev.items.DevItems
 import emeraldwater.infernity.dev.playerInterpreter
 import emeraldwater.infernity.dev.playerModes
@@ -83,8 +80,8 @@ data class Plot(val id: Int) {
 
     suspend fun savePlot() {
         var iter = 0
-        for(sx in 0 downTo -1) {
-            for(sz in 0..9) {
+        for(sx in 1 downTo -3) {
+            for(sz in -1..10) {
                 withContext(Dispatchers.IO) {
                     devInstance.loadChunk(sx, sz).get()
                 }
@@ -98,7 +95,7 @@ data class Plot(val id: Int) {
             iter++
             try {
                 devActionContainers = parseDevArea(devInstance)
-            } catch(e: Exception) {}
+            } catch(_: Exception) {}
 
             if(iter%4 == 0) {
                 buildInstance.saveChunksToStorage()
@@ -123,7 +120,7 @@ data class Plot(val id: Int) {
             player.inventory.clear()
 
             playerInterpreter[player.username] = Interpreter(devActionContainers, player)
-            playerInterpreter[player.username]?.interpretEvent(PlayerEvent.JOIN)
+            player.interpret(PlayerEvent.JOIN)
         }
     }
 

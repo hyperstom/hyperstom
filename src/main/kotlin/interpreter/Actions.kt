@@ -1,69 +1,43 @@
 package emeraldwater.infernity.dev.interpreter
 
-sealed class Event {
-    class PlayerEvent(val event: emeraldwater.infernity.dev.interpreter.PlayerEvent) : Event()
+import kotlin.enums.EnumEntries
+
+interface EnumAction {
+    val signText: String
 }
-enum class PlayerEvent(val signText: String) {
+
+interface Event : EnumAction {
+
+}
+enum class PlayerEvent(override val signText: String) : EnumAction, Event {
     JOIN("Join"),
     LEAVE("Leave");
 }
 
-fun playerEventFromString(string: String): PlayerEvent? {
-    for(entry in PlayerEvent.entries) {
-        if(string == entry.signText) {
-            return entry
-        }
-    }
-    return null
-}
-
-enum class PlayerAction(val signText: String) {
+enum class PlayerAction(override val signText: String) : EnumAction {
     SEND_MESSAGE("SendMessage"),
     LAUNCH_UP("LaunchUp");
 }
 
-fun playerActionFromString(string: String): PlayerAction? {
-    for(entry in PlayerAction.entries) {
-        if(string == entry.signText) {
-            return entry
-        }
-    }
-    return null
-}
-
-enum class SetVariable(val signText: String) {
+enum class SetVariable(override val signText: String) : EnumAction {
     SET_EQUALS("="),;
 }
 
-fun setVariableFromString(string: String): SetVariable? {
-    for(entry in SetVariable.entries) {
-        if(string == entry.signText) {
-            return entry
-        }
-    }
-    return null
-}
-
-enum class SetTarget(val signText: String) {
+enum class SetTarget(override val signText: String) : EnumAction {
     SET_EQUALS("="),;
 }
 
-fun setTargetFromString(string: String): SetTarget? {
-    for(entry in SetTarget.entries) {
-        if(string == entry.signText) {
-            return entry
-        }
-    }
-    return null
-}
-
-enum class IfPlayer(val signText: String) {
+enum class IfPlayer(override val signText: String) : EnumAction {
     STANDING_ON("StandingOn");
 }
 
-fun ifPlayerFromString(string: String): IfPlayer? {
-    for(entry in IfPlayer.entries) {
-        if(string == entry.signText) {
+enum class IfVariable(override val signText: String) : EnumAction {
+
+}
+
+fun <T : EnumAction> findEntryByString(string: String, entries: List<T>): T? {
+    for (entry in entries) {
+        if (string == entry.signText) {
             return entry
         }
     }

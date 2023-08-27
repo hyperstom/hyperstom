@@ -6,53 +6,22 @@ import net.minestom.server.instance.Instance
 import net.minestom.server.instance.block.Block
 import net.minestom.server.item.ItemStack
 import net.minestom.server.tag.Tag
-import kotlin.math.hypot
 
 data class ParseBlockResult(val point: Point, val action: List<Action>)
 
 fun parseDevArea(instance: Instance): List<ActionContainer> {
     val actionContainers = mutableListOf<ActionContainer>()
-    for(x in -0 downTo -20 step 3) {
+    for(x in 0 downTo -20 step 3) {
         for(z in 0..0) {
             for(y in 2..255 step 5) {
                 val block = instance.getBlock(x, y, z)
                 if(block.name() == "minecraft:diamond_block") {
                     val event = instance.getBlock(x-1, y, z).getTag(Tag.String("line2"))
-                    if(event != null && playerEventFromString(event) != null) {
+                    if(event != null && findEntryByString(event, PlayerEvent.entries) != null) {
                         val (_, actions) = parseBlock(instance, Vec(x.toDouble(), y.toDouble(), z.toDouble()))
                         actionContainers.add(PlayerEventBlock(
-                            playerEventFromString(event)!!,
+                            findEntryByString(event, PlayerEvent.entries)!!,
                             actions
-                        ))
-                    }
-                }
-                if(block.name() == "minecraft:oak_planks") {
-                    val event = instance.getBlock(x-1, y, z).getTag(Tag.String("line2"))
-                    if(event != null && ifPlayerFromString(event) != null) {
-                        val (_, actions) = parseBlock(instance, Vec(x.toDouble(), y.toDouble(), z.toDouble()))
-                        val arguments = mutableListOf<Argument>()
-                        for(slot in 0..53) {
-                            val item = instance.getBlock(x, y + 1, z).getTag(Tag.ItemStack("barrel.slot$slot"))
-                            if(item != null && item != ItemStack.AIR) {
-                                if(item.getTag(Tag.String("varitem.id")) == "txt") {
-                                    arguments.add(Argument.Text(item.getTag(Tag.String("varitem.value"))))
-                                }
-                                else if (item.getTag(Tag.String("varitem.id")) == "rtxt") {
-                                    arguments.add(Argument.RichText(item.getTag(Tag.Component("varitem.value"))))
-                                }
-                                else if (item.getTag(Tag.String("varitem.id")) == "num") {
-                                    arguments.add(Argument.Number(item.getTag(Tag.Double("varitem.value"))))
-                                }
-                                else {
-                                    arguments.add(Argument.Item(item))
-                                }
-
-                            }
-                        }
-                        actionContainers.add(IfPlayerBlock(
-                            ifPlayerFromString(event)!!,
-                            actions,
-                            arguments
                         ))
                     }
                 }
@@ -106,17 +75,17 @@ fun parseBlock(instance: Instance, getPoint: Point): ParseBlockResult {
 
 
         if(block.name() == "minecraft:cobblestone") {
-            if(line2 != null && playerActionFromString(line2) != null) {
+            if(line2 != null && findEntryByString(line2, PlayerAction.entries) != null) {
                 actions.add(PlayerActionBlock(
-                    playerActionFromString(line2)!!,
+                    findEntryByString(line2, PlayerAction.entries)!!,
                     arguments
                 ))
             }
         }
         if(block.name() == "minecraft:iron_block") {
-            if(line2 != null && setVariableFromString(line2) != null) {
+            if(line2 != null && findEntryByString(line2, SetVariable.entries) != null) {
                 actions.add(SetVariableBlock(
-                    setVariableFromString(line2)!!,
+                    findEntryByString(line2, SetVariable.entries)!!,
                     arguments
                 ))
             }
@@ -133,14 +102,25 @@ fun parseBlock(instance: Instance, getPoint: Point): ParseBlockResult {
             }
         }
         if(block.name() == "minecraft:target_block") {
-            if(line2 != null && setTargetFromString(line2) != null) {
+            if(line2 != null && findEntryByString(line2, SetTarget.entries) != null) {
                 actions.add(SetTargetBlock(
-                    setTargetFromString(line2)!!,
+                    findEntryByString(line2, SetTarget.entries)!!,
                     arguments
                 ))
             }
         }
+        if(block.name() == "minecraft:oak_planks") {
+            val (point2, actions2) = parseBlock(instance, point)
+            if(line2 != null && findEntryByString(line2, IfPlayer.entries) != null) {
+                val func = IfPlayerBlock(
+                    findEntryByString(line2, IfPlayer.entries)!!,
+                    actions2,
+                    arguments,
+                )
+                actions.add(func)
+            }
+            point = point2
+        }
     }
-    return ParseBlockResult(point, actions)
 
 }

@@ -12,6 +12,7 @@ import emeraldwater.infernity.dev.items.checkValuesMenu
 import emeraldwater.infernity.dev.items.handleEditItem
 import emeraldwater.infernity.dev.plots.PlotMode
 import emeraldwater.infernity.dev.plots.PlotState
+import emeraldwater.infernity.dev.plugin_channels.pluginChannelHandler
 import net.hollowcube.block.placement.HCPlacementRules
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.minestom.server.MinecraftServer
@@ -33,6 +34,7 @@ import net.minestom.server.world.DimensionType
 
 lateinit var instanceHub: InstanceContainer
 var playerModes = mutableMapOf<String, PlotState>()
+var playerMods = mutableMapOf<String, ClientMod>()
 var playerTargets = mutableMapOf<String, Point>()
 var playerInterpreter = mutableMapOf<String, Interpreter>()
 val players: List<Player> = mutableListOf()
@@ -90,7 +92,7 @@ object Main {
         globalEventHandler.addListener(PlayerChatEvent::class.java) { overrideChat(it); handleEditItem(it); }
         globalEventHandler.addListener(InventoryCloseEvent::class.java) { handleBarrelClose(it) }
         globalEventHandler.addListener(PlayerUseItemEvent::class.java) { checkValuesMenu(it) }
-
+        globalEventHandler.addListener(PlayerPluginMessageEvent::class.java) { pluginChannelHandler(it) }
         globalEventHandler.addListener(PlayerTickEvent::class.java) {
             it.player.interpret(PlayerEvent.TICK)
         }

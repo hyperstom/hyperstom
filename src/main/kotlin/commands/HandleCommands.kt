@@ -186,6 +186,36 @@ object SavePlotsCommand : Command("saveplots") {
     }
 }
 
+object KillCommand : Command("kill") {
+    init {
+        setDefaultExecutor { sender, context ->
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>No!"))
+        }
+
+        val playerToKill = ArgumentType.Entity("player to kill").onlyPlayers(true).singleEntity(true)
+
+        addSyntax({ sender, context ->
+            val player: Player = context!!.get(playerToKill)!!.findFirstPlayer(sender)!!
+            player.kill()
+        }, playerToKill)
+    }
+}
+
+object LocateCommand : Command("locate") {
+    init {
+        setDefaultExecutor { sender, context ->
+            sender.sendMessage("player state: ${playerModes[(sender as Player).username]!!}")
+        }
+
+        val player = ArgumentType.Entity("player to locate").onlyPlayers(true).singleEntity(true)
+
+        addSyntax({ sender, context ->
+            val locatedPlayer: Player = context!!.get(player)!!.findFirstPlayer(sender)!!
+            sender.sendMessage("${locatedPlayer.username}'s state: ${playerModes[locatedPlayer.username]!!}")
+        }, player)
+    }
+}
+
 fun handleCommandRegistration(){
     MinecraftServer.getCommandManager().register(JoinCommand)
     MinecraftServer.getCommandManager().register(PlayCommand)
@@ -194,4 +224,6 @@ fun handleCommandRegistration(){
     MinecraftServer.getCommandManager().register(DevCommand)
     MinecraftServer.getCommandManager().register(DebugCommand)
     MinecraftServer.getCommandManager().register(SavePlotsCommand)
+    MinecraftServer.getCommandManager().register(KillCommand)
+    MinecraftServer.getCommandManager().register(LocateCommand)
 }

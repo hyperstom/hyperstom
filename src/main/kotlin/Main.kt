@@ -12,6 +12,7 @@ import emeraldwater.infernity.dev.items.checkValuesMenu
 import emeraldwater.infernity.dev.items.handleEditItem
 import emeraldwater.infernity.dev.plots.PlotMode
 import emeraldwater.infernity.dev.plots.PlotState
+import net.hollowcube.block.placement.HCPlacementRules
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Point
@@ -56,6 +57,7 @@ object Main {
         // Register commands
         handleCommandRegistration()
         // Make placing stairs and stuff like that work
+        // HCPlacementRules.init()
 
         // Create the text display at spawn
         val display = Entity(EntityType.TEXT_DISPLAY)

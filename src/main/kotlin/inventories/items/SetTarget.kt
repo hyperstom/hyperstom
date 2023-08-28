@@ -14,7 +14,13 @@ private val menuItems: List<ItemStack> = listOf(
         .item(Material.POTATO)
         .name("<green>Default Player")
         .description("<gray>Targets the default player of this event.")
-        .build(SetTarget.DEFAULT)
+        .build(SetTarget.DEFAULT),
+
+    DevItemBuilder()
+        .item(Material.POTATO)
+        .name("<green>All Players")
+        .description("<gray>Targets all players on the plot.")
+        .build(SetTarget.ALL_PLAYERS)
 )
 
 fun displaySetTargetMenu(player: Player) {

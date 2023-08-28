@@ -90,22 +90,23 @@ fun parseBlock(instance: Instance, getPoint: Point): ParseBlockResult {
             }
         }
         if(block.name() == "minecraft:lapis_block") {
-            if(line2 != null) {
-                val (point2, actions2) = parseBlock(instance, point)
-                val func = FunctionDefinitionBlock(
-                    actions2,
-                    arguments,
-                )
-                actions.add(func)
-                point = point2
-            }
+            val (point2, actions2) = parseBlock(instance, point)
+            val func = FunctionDefinitionBlock(
+                actions2,
+                arguments,
+            )
+            actions.add(func)
+            point = point2
         }
         if(block.name() == "minecraft:target_block") {
+            val (point2, actions2) = parseBlock(instance, point)
             if(line2 != null && findEntryByString(line2, SetTarget.entries) != null) {
                 actions.add(SetTargetBlock(
                     findEntryByString(line2, SetTarget.entries)!!,
+                    actions2,
                     arguments
                 ))
+                point = point2
             }
         }
         if(block.name() == "minecraft:oak_planks") {

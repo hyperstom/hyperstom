@@ -30,7 +30,8 @@ enum class SetVariable(override val signText: String) : EnumAction {
 }
 
 enum class SetTarget(override val signText: String) : EnumAction {
-    DEFAULT("Default"),;
+    DEFAULT("Default"),
+    ALL_PLAYERS("AllPlayers");
 }
 
 enum class IfPlayer(override val signText: String) : EnumAction {

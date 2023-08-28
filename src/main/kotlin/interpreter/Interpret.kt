@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.minestom.server.entity.Player
+import net.minestom.server.instance.Instance
 
 fun Player.interpret(event: Event) = run {
     val player = this
@@ -22,16 +23,19 @@ fun Player.interpret(event: Event) = run {
 
 class Interpreter(
     val containers: List<ActionContainer>,
-    var playerTarget: Player,
+    var playerTargets: List<Player>,
+    val plotID: Int,
+    val instance: Instance,
 ) {
     val interpreterScope = CoroutineScope(Dispatchers.Default)
     val functions: Map<String, ActionContainer>
     val localFunctions: Map<String, ActionContainer> = mutableMapOf()
-
+    val defaultPlayer: Player?
     val globalVariables: Map<String, Argument> = mutableMapOf()
 
     init {
         functions = mutableMapOf()
+        defaultPlayer = playerTargets.getOrNull(0)
         for(container in containers) {
             if(container is FunctionDefinitionBlock) {
                 val arg = container.args[0]
@@ -40,7 +44,7 @@ class Interpreter(
                 }
             }
         }
-        playerTarget.sendMessage("containers: $containers")
+        playerTargets.forEach { it.sendMessage("containers: $containers") }
     }
 
     /**
@@ -59,8 +63,8 @@ class Interpreter(
     }
 
     /**
-     * Interpret an individual container.
-     * @param container The container to parse.
+     * Interpret an individual container
+     * @param container The container to interpret
      * @param vars Local variables in this scope
      */
     fun interpretContainer(container: ActionContainer, vars: MutableMap<String, Argument>) {
@@ -68,6 +72,17 @@ class Interpreter(
         val containerScope: MutableMap<String, Argument> = mutableMapOf()
         for(action in container.actions) {
             interpretBlock(action, vars, containerScope)
+        }
+    }
+    /**
+     * Interpret an individual container
+     * @param container The container to interpret
+     * @param vars Local variables in this scope
+     * @param blockVars Block variables in this scope
+     */
+    fun interpretContainer(container: ActionContainer, vars: MutableMap<String, Argument>, blockVars: MutableMap<String, Argument>) {
+        for(action in container.actions) {
+            interpretBlock(action, vars, blockVars)
         }
     }
 

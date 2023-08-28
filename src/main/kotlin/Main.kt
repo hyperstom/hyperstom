@@ -35,6 +35,7 @@ lateinit var instanceHub: InstanceContainer
 var playerModes = mutableMapOf<String, PlotState>()
 var playerTargets = mutableMapOf<String, Point>()
 var playerInterpreter = mutableMapOf<String, Interpreter>()
+val players: List<Player> = mutableListOf()
 fun mm(string: String) = MiniMessage.miniMessage().deserialize("<!italic>$string")
 
 val barrelName = mm("Block Arguments")

@@ -19,37 +19,39 @@ fun Interpreter.playerAction(block: PlayerActionBlock, localVariables: MutableMa
         PlayerAction.SEND_MESSAGE -> {
             val text = block.args.getOrNull(0)
             if(text is Argument.RichText) {
-                playerTarget.sendMessage(text.value)
+                playerTargets.forEach { it.sendMessage(text.value) }
             }
         }
         PlayerAction.SEND_ACTIONBAR -> {
             val text = block.args.getOrNull(0)
             if(text is Argument.RichText) {
-                playerTarget.sendActionBar(text.value)
+                playerTargets.forEach { it.sendActionBar(text.value) }
             }
         }
         PlayerAction.SEND_TITLE -> {
             val title = block.args.getOrNull(0)
             val subtitle = block.args.getOrNull(1)
-            playerTarget.sendTitlePart(
-                TitlePart.TIMES,
-                Title.Times.times(
-                    java.time.Duration.ofMillis(500),
-                    java.time.Duration.ofMillis(3000),
-                    java.time.Duration.ofMillis(500)
+            playerTargets.forEach {
+                it.sendTitlePart(
+                    TitlePart.TIMES,
+                    Title.Times.times(
+                        java.time.Duration.ofMillis(500),
+                        java.time.Duration.ofMillis(3000),
+                        java.time.Duration.ofMillis(500)
+                    )
                 )
-            )
+            }
             if(title is Argument.RichText) {
-                playerTarget.sendTitlePart(TitlePart.TITLE, title.value)
+                playerTargets.forEach { it.sendTitlePart(TitlePart.TITLE, title.value) }
             }
             if(subtitle is Argument.RichText) {
-                playerTarget.sendTitlePart(TitlePart.SUBTITLE, subtitle.value)
+                playerTargets.forEach { it.sendTitlePart(TitlePart.SUBTITLE, subtitle.value) }
             }
         }
         PlayerAction.LAUNCH_UP -> {
             val num = block.args[0]
             if(num is Argument.Number) {
-                playerTarget.velocity = playerTarget.velocity.add(0.0, num.value, 0.0)
+                playerTargets.forEach { it.velocity = it.velocity.add(0.0, num.value, 0.0) }
             }
         }
 

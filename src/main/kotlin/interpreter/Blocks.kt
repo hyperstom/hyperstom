@@ -47,8 +47,9 @@ data class SetVariableBlock(
 
 data class SetTargetBlock(
     val action: SetTarget,
+    override val actions: List<Action>,
     override val args: List<Argument>
-) : Action {
+) : ActionContainer {
     override fun toString(): String {
         return """SetTarget ${this.action.signText} $args"""
     }

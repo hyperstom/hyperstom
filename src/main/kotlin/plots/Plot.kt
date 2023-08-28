@@ -122,7 +122,12 @@ data class Plot(val id: Int) {
                     player.setGameMode(GameMode.SURVIVAL)
                     player.inventory.clear()
 
-                    playerInterpreter[player.username] = Interpreter(devActionContainers, player)
+                    playerInterpreter[player.username] = Interpreter(
+                        devActionContainers,
+                        listOf(player),
+                        id,
+                        buildInstance
+                    )
                     player.interpret(PlayerEvent.JOIN)
                 }
             }
@@ -134,7 +139,12 @@ data class Plot(val id: Int) {
                 player.setGameMode(GameMode.SURVIVAL)
                 player.inventory.clear()
 
-                playerInterpreter[player.username] = Interpreter(devActionContainers, player)
+                playerInterpreter[player.username] = Interpreter(
+                    devActionContainers,
+                    listOf(player),
+                    id,
+                    buildInstance
+                )
                 player.interpret(PlayerEvent.JOIN)
             }
         }

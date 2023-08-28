@@ -5,7 +5,7 @@
 
 ## What is this?
 EmeraldWater is an open-source take on [DiamondFire](https://mcdiamondfire.com) written using 
-[Minestom](https://minestom.net/) and [Kotlin](https://kotlinlang.org/).
+[Minestom](https://minestom.net/) and [Kotlin](https://kotlinlang.org/). A public instance is hosted at `emeraldwater.infernity.dev`
 
 ## Notable Features
 > **Warning**

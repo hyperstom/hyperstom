@@ -16,17 +16,22 @@ import kotlin.time.Duration
 fun Interpreter.ifPlayer(block: IfPlayerBlock, localVariables: MutableMap<String, Argument>, blockVariables: MutableMap<String, Argument>) {
     when(block.action) {
         IfPlayer.STANDING_ON -> {
-            var blockPos = playerTarget.position.add(0.0, -0.06, 0.0)
-            val material = playerTarget.instance.getBlock(playerTarget.position.add(0.0, -0.5, 0.0)).registry().material()
-            var runBlock = false
-            for(arg in block.args) {
-                if(arg is Argument.Item) {
-                    if(arg.value.material() == material) {
-                        runBlock = true
-                        interpretContainer(block, localVariables)
-                        return
+            var trues = 0
+            playerTargets.forEach { playerTarget ->
+                var blockPos = playerTarget.position.add(0.0, -0.06, 0.0)
+                val material = playerTarget.instance.getBlock(playerTarget.position.add(0.0, -0.5, 0.0)).registry().material()
+
+                for(arg in block.args) {
+                    if(arg is Argument.Item) {
+                        if(arg.value.material() == material) {
+                            trues++
+                            continue
+                        }
                     }
                 }
+            }
+            if(trues == playerTargets.size) {
+                interpretContainer(block, localVariables, blockVariables)
             }
         }
     }

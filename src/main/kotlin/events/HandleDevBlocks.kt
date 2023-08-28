@@ -1,11 +1,14 @@
 package emeraldwater.infernity.dev.events
 
 import emeraldwater.infernity.dev.items.DevItems
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.coordinate.Vec
 import net.minestom.server.event.player.PlayerBlockBreakEvent
 import net.minestom.server.event.player.PlayerBlockPlaceEvent
 import net.minestom.server.instance.block.Block
+import net.minestom.server.item.ItemStack
 import net.minestom.server.tag.Tag
 import org.jglrxavpok.hephaistos.nbt.NBT
 import org.jglrxavpok.hephaistos.nbt.NBTType
@@ -74,21 +77,21 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
             event.player.instance.setBlock(x, y, z, Block.LAPIS_BLOCK.withTag(Tag.String("codeBlockType"), "block"))
             event.player.instance.setBlock(x, y, z + 1, Block.PISTON.withProperty("facing", "south"))
             event.player.instance.setBlock(x, y, z + 3, Block.PISTON.withProperty("facing", "north"))
-            event.player.instance.setBlock(x, y + 1, z, Block.BARREL)
+            event.player.instance.setBlock(x, y + 1, z, getBarrel())
             event.player.instance.setBlock(x - 1, y, z, signWithLines("FUNCTION"))
         }
 
         Block.COBBLESTONE -> {
             event.player.instance.setBlock(x, y, z, Block.COBBLESTONE.withTag(Tag.String("codeBlockType"), "block"))
             event.player.instance.setBlock(x, y, z + 1, Block.STONE)
-            event.player.instance.setBlock(x, y + 1, z, Block.BARREL)
+            event.player.instance.setBlock(x, y + 1, z, getBarrel())
             event.player.instance.setBlock(x - 1, y, z, signWithLines("PLAYER ACTION"))
         }
 
         Block.IRON_BLOCK -> {
             event.player.instance.setBlock(x, y, z, Block.IRON_BLOCK.withTag(Tag.String("codeBlockType"), "block"))
             event.player.instance.setBlock(x, y, z + 1, Block.STONE)
-            event.player.instance.setBlock(x, y + 1, z, Block.BARREL)
+            event.player.instance.setBlock(x, y + 1, z, getBarrel())
             event.player.instance.setBlock(x - 1, y, z, signWithLines("SET VARIABLE"))
         }
 
@@ -96,7 +99,7 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
             event.player.instance.setBlock(x, y, z, Block.OAK_PLANKS.withTag(Tag.String("codeBlockType"), "block"))
             event.player.instance.setBlock(x, y, z + 1, Block.PISTON.withProperty("facing", "south"))
             event.player.instance.setBlock(x, y, z + 3, Block.PISTON.withProperty("facing", "north"))
-            event.player.instance.setBlock(x, y + 1, z, Block.BARREL)
+            event.player.instance.setBlock(x, y + 1, z, getBarrel())
             event.player.instance.setBlock(x - 1, y, z, signWithLines("IF PLAYER"))
         }
 
@@ -104,7 +107,7 @@ fun placeDevBlock(event: PlayerBlockPlaceEvent) {
             event.player.instance.setBlock(x, y, z, Block.TARGET.withTag(Tag.String("codeBlockType"), "block"))
             event.player.instance.setBlock(x, y, z + 1, Block.PISTON.withProperty("facing", "south"))
             event.player.instance.setBlock(x, y, z + 3, Block.PISTON.withProperty("facing", "north"))
-            event.player.instance.setBlock(x, y + 1, z, Block.BARREL)
+            event.player.instance.setBlock(x, y + 1, z, getBarrel())
             event.player.instance.setBlock(x - 1, y, z, signWithLines("SET TARGET"))
         }
 
@@ -243,6 +246,36 @@ fun breakDevBlock(event: PlayerBlockBreakEvent) {
             event.player.instance.setBlock(x, y + 1, z, Block.AIR)
             event.player.instance.setBlock(x - 1, y, z, Block.AIR)
         }
+        "container" -> {
+            for (slot in 0..53) {
+                val item = event.block.getTag(Tag.ItemStack("barrel.slot$slot"))
+                if (item.isAir) {
+                    if (!event.player.inventory.itemInMainHand.isAir) {
+                        event.player.instance.setBlock(
+                            event.blockPosition,
+                            event.block.withTag(
+                                Tag.ItemStack("barrel.slot$slot"),
+                                event.player.inventory.itemInMainHand.withAmount(1)
+                            )
+                        )
+                        event.player.inventory.itemInMainHand =
+                            event.player.inventory.itemInMainHand.withAmount(event.player.inventory.itemInMainHand.amount() - 1)
+                        event.player.playSound(
+                            Sound.sound(
+                                Key.key("minecraft:entity.item.pickup"),
+                                Sound.Source.BLOCK,
+                                1f,
+                                1f
+                            )
+                        )
+                        break
+                    }
+                    break
+                }
+
+            }
+            placed = false
+        }
 
         else -> placed = false
     }
@@ -333,4 +366,13 @@ fun signWithLines(vararg lines: String): Block {
         .withTag(Tag.String("line2"), line2)
         .withTag(Tag.String("line3"), line3)
         .withTag(Tag.String("line4"), line4)
+}
+
+fun getBarrel(): Block {
+    var block = Block.BARREL
+    for(slot in 0..53) {
+        block = block.withTag(Tag.ItemStack("barrel.slot$slot"), ItemStack.AIR)
+    }
+    block = block.withTag(Tag.String("codeBlockType"), "container")
+    return block
 }

@@ -12,10 +12,10 @@ import net.minestom.server.event.player.PlayerBlockPlaceEvent
 fun onPlaceBlock(event: PlayerBlockPlaceEvent) {
     event.isCancelled = true
     val player = event.player
-    if(playerModes[player.username]!!.mode == PlotMode.BUILD) {
+    if (playerModes[player.username]!!.mode == PlotMode.BUILD) {
         event.isCancelled = false
     }
-    if(playerModes[player.username]!!.mode == PlotMode.DEV) {
+    if (playerModes[player.username]!!.mode == PlotMode.DEV) {
         event.isCancelled = false
         placeDevBlock(event)
     }
@@ -28,10 +28,10 @@ fun onPlaceBlock(event: PlayerBlockPlaceEvent) {
 fun onBreakBlock(event: PlayerBlockBreakEvent) {
     event.isCancelled = true
     val player = event.player
-    if(playerModes[player.username]!!.mode == PlotMode.BUILD) {
+    if (playerModes[player.username]!!.mode == PlotMode.BUILD) {
         event.isCancelled = false
     }
-    if(playerModes[player.username]!!.mode == PlotMode.DEV) {
+    if (playerModes[player.username]!!.mode == PlotMode.DEV) {
         breakDevBlock(event)
     }
 }

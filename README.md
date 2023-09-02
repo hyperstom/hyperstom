@@ -47,10 +47,6 @@ You can host a local instance of **Hyperstom** by doing the following:
 
 
 ### Using a JAR Download
-> **Warning**
-> We do not currently have a GitHub workflow setup for this project yet. Feel free to contribute one or 
-> wait for one to be added.
-
 Alternatively, you can download a JAR from us.
 1. Go to our GitHub releases page and install the latest version.
 2. Create the `./worlds` directory in the JAR's folder.

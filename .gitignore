@@ -5,17 +5,8 @@ build/
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-.idea/discord.xml
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+.idea/*
+!.idea/runConfigurations/
 gradlew
 gradlew.bat
 
@@ -44,6 +35,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-### EmeraldWater ###
+### Hyperstom ###
 # Worlds should not be saved to the repository in commits as they take up a lot of space.
 /worlds/
